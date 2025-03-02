@@ -138,7 +138,12 @@ import type {
   TransactionsResponseWithBlobs,
   TransactionsStats,
 } from 'types/api/transaction';
-import type { TwineL2DepositsResponse, TwineL2WithdrawalsResponse } from 'types/api/twineL2';
+import type {
+  TwineL2DepositsResponse,
+  TwineL2WithdrawalsResponse,
+  TwineBatchesResponse,
+  TwineBatchTxs,
+} from 'types/api/twineL2';
 import type { TxInterpretationResponse } from 'types/api/txInterpretation';
 import type { TTxsFilters, TTxsWithBlobsFilters } from 'types/api/txsFilters';
 import type { TxStateChanges } from 'types/api/txStateChanges';
@@ -1052,6 +1057,17 @@ export const RESOURCES = {
     filterFields: [],
   },
 
+  twine_l2_txn_batches: {
+    path: '/api/v2/twine/batches',
+    filterFields: [],
+  },
+
+  twine_l2_txn_batch_txs: {
+    path: '/api/v2/transactions/twine-batch/:number',
+    pathParams: [ 'number' as const ],
+    filterFields: [],
+  },
+
   // NOVES-FI
   noves_transaction: {
     path: '/api/v2/proxy/noves-fi/transactions/:hash',
@@ -1251,7 +1267,8 @@ export type PaginatedResources = 'blocks' | 'block_txs' | 'block_election_reward
 'watchlist' | 'private_tags_address' | 'private_tags_tx' |
 'domains_lookup' | 'addresses_lookup' | 'user_ops' | 'validators_stability' | 'validators_blackfort' | 'noves_address_history' |
 'token_transfers_all' | 'scroll_l2_txn_batches' | 'scroll_l2_txn_batch_txs' | 'scroll_l2_txn_batch_blocks' |
-'scroll_l2_deposits' | 'scroll_l2_withdrawals' | 'advanced_filter' | 'pools' | 'twine_l2_deposits' | 'twine_l2_withdrawals';
+'scroll_l2_deposits' | 'scroll_l2_withdrawals' | 'advanced_filter' | 'pools' | 'twine_l2_deposits' | 'twine_l2_withdrawals' |
+'twine_l2_txn_batches' | 'twine_l2_txn_batch_txs';
 
 export type PaginatedResponse<Q extends PaginatedResources> = ResourcePayload<Q>;
 
@@ -1449,13 +1466,19 @@ Q extends 'pools' ? PoolsResponse :
 Q extends 'pool' ? Pool :
 Q extends 'twine_l2_deposits' ? TwineL2DepositsResponse :
 Q extends 'twine_l2_withdrawals' ? TwineL2WithdrawalsResponse :
+Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse :
+Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
 never;
 /* eslint-enable @stylistic/indent */
 
 export type ResourcePayload<Q extends ResourceName> = ResourcePayloadA<Q> | ResourcePayloadB<Q>;
-export type PaginatedResponseItems<Q extends ResourceName> = Q extends PaginatedResources ? ResourcePayloadA<Q>['items'] | ResourcePayloadB<Q>['items'] : never;
+export type PaginatedResponseItems<Q extends ResourceName> = Q extends PaginatedResources ?
+  Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse['batches'] :
+    Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs['items'] :
+      ResourcePayload<Q> extends { items: Array<unknown> } ? ResourcePayload<Q>['items'] :
+        never : never;
 export type PaginatedResponseNextPageParams<Q extends ResourceName> = Q extends PaginatedResources ?
-  ResourcePayloadA<Q>['next_page_params'] | ResourcePayloadB<Q>['next_page_params'] :
+    ResourcePayloadA<Q>['next_page_params'] | ResourcePayloadB<Q>['next_page_params'] :
   never;
 
 /* eslint-disable @stylistic/indent */

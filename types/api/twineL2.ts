@@ -1,3 +1,15 @@
+import type { Transaction } from './transaction';
+
+export const TWINE_L2_TX_BATCH_STATUSES = [
+  'Processed on L2' as const,
+  'Committed on L1' as const,
+  'Batch Finalized on L1' as const,
+  'Batch Txs Finalized on L1' as const,
+  'Executed on L1' as const,
+] as const;
+
+export type TwineBatchStatus = typeof TWINE_L2_TX_BATCH_STATUSES[number];
+
 export type TwineL2DepositsItem = {
   tx_hash: string;
   nonce: number;
@@ -39,4 +51,56 @@ export type TwineL2WithdrawalsResponse = {
     items_count: number;
     nonce: string;
   };
+};
+
+export interface TwineBatchesDetails {
+  id: number;
+  chain_id: string;
+  l1_gas_price: string;
+  l1_transaction_count: number;
+  l2_transaction_count: number;
+  l2_fair_gas_price: string;
+  commit_transaction_hash: string;
+  commit_transaction_timestamp: string;
+  execute_transaction_hash: string;
+  execute_transaction_timestamp: string;
+  prove_transaction_hash: string | null;
+  prove_transaction_timestamp: string | null;
+  status: TwineBatchStatus;
+}
+
+export interface TwineBatchesItem {
+  number: number;
+  timestamp: string;
+  details: Array<TwineBatchesDetails>;
+  start_block: number;
+  end_block: number;
+  root_hash: string;
+}
+
+export type TwineBatchesResponse = {
+  batches: Array<TwineBatchesItem>;
+  next_page_params: {
+    number: number;
+    items_count: number;
+  } | null;
+};
+
+export interface TwineBatch extends TwineBatchesItem {
+  commit_transaction_hash: string | null;
+  commit_transaction_timestamp: string | null;
+  prove_transaction_hash: string | null;
+  prove_transaction_timestamp: string | null;
+  status: TwineBatchStatus;
+  transaction_count: number;
+}
+
+export type TwineBatchTxs = {
+  items: Array<Transaction>;
+  next_page_params: {
+    batch_number: string;
+    block_number: number;
+    index: number;
+    items_count: number;
+  } | null;
 };

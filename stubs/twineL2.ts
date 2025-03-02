@@ -1,4 +1,4 @@
-import type { TwineL2DepositsItem } from 'types/api/twineL2';
+import type { TwineL2DepositsItem, TwineBatchesItem } from 'types/api/twineL2';
 
 export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
   tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
@@ -24,4 +24,44 @@ export const TWINE_WITHDRAWAL_ITEM: TwineL2DepositsItem = {
   to_twine_address: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
   amount: '1500000000000000000',
   created_at: '2025-02-04T08:00:12.123456Z',
+};
+
+export const TWINE_L2_TXN_BATCHES_ITEM: TwineBatchesItem = {
+  timestamp: '2025-02-04T08:00:12.123456Z',
+  number: 12345,
+  details: [
+    {
+      id: 1,
+      chain_id: '17000',
+      status: 'Executed on L1',
+      l1_gas_price: '15000000000',
+      l1_transaction_count: 100,
+      l2_fair_gas_price: '1000000000',
+      l2_transaction_count: 50,
+      commit_transaction_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+      commit_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+      execute_transaction_hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+      execute_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+      prove_transaction_hash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+      prove_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+    },
+    {
+      id: 1,
+      chain_id: '900',
+      status: 'Executed on L1',
+      l1_gas_price: '15000000000',
+      l1_transaction_count: 100,
+      l2_fair_gas_price: '1000000000',
+      l2_transaction_count: 50,
+      commit_transaction_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+      commit_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+      execute_transaction_hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+      execute_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+      prove_transaction_hash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+      prove_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+    },
+  ],
+  start_block: 1000,
+  end_block: 2000,
+  root_hash: '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef',
 };

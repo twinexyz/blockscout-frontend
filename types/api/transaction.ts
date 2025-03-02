@@ -8,6 +8,7 @@ import type { OptimisticL2WithdrawalStatus } from './optimisticL2';
 import type { ScrollL2BlockStatus } from './scrollL2';
 import type { TokenInfo } from './token';
 import type { TokenTransfer } from './tokenTransfer';
+import type { TwineBatchesItem } from './twineL2';
 import type { TxAction } from './txAction';
 import type { ZkSyncBatchesItem } from './zkSyncL2';
 
@@ -91,6 +92,8 @@ export type Transaction = {
   zksync?: Omit<ZkSyncBatchesItem, 'number' | 'transaction_count' | 'timestamp'> & {
     batch_number: number | null;
   };
+  // Twine fields
+  twine?: TwineTransactionData;
   // Zilliqa fields
   zilliqa?: {
     is_scilla: boolean;
@@ -106,6 +109,8 @@ export type Transaction = {
   arbitrum?: ArbitrumTransactionData;
   scroll?: ScrollTransactionData;
 };
+
+type TwineTransactionData = Omit<TwineBatchesItem, 'number' | 'transaction_count' | 'timestamp'> & { batch_number: number | null };
 
 type ArbitrumTransactionData = {
   batch_number: number;
