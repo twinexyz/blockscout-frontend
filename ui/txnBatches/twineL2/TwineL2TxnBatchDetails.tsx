@@ -221,7 +221,7 @@ const TwineL2TxnBatchDetails = ({ query }: Props) => {
                       <CopyToClipboard text={ detail.commit_transaction_hash }/>
                       { detail.commit_transaction_timestamp && (
                         <Text as="span" variant="secondary" whiteSpace="nowrap">
-                          2mo ago
+                          <DetailsTimestamp timestamp={ detail.commit_transaction_timestamp }/>
                         </Text>
                       ) }
                     </Flex>
@@ -236,7 +236,7 @@ const TwineL2TxnBatchDetails = ({ query }: Props) => {
                           <CopyToClipboard text={ detail.prove_transaction_hash }/>
                           { detail.prove_transaction_timestamp && (
                             <Text as="span" variant="secondary" whiteSpace="nowrap">
-                              2mo ago
+                              <DetailsTimestamp timestamp={ detail.prove_transaction_timestamp }/>
                             </Text>
                           ) }
                         </Flex>
@@ -251,7 +251,7 @@ const TwineL2TxnBatchDetails = ({ query }: Props) => {
                       <CopyToClipboard text={ detail.execute_transaction_hash }/>
                       { detail.execute_transaction_timestamp && (
                         <Text as="span" variant="secondary" whiteSpace="nowrap">
-                          2mo ago
+                          <DetailsTimestamp timestamp={ detail.execute_transaction_timestamp }/>
                         </Text>
                       ) }
                     </Flex>
