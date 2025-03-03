@@ -1,8 +1,8 @@
-import { Grid, GridItem, Link, Text, Flex, Tag, TagLabel } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Flex, Tag, TagLabel } from '@chakra-ui/react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { scroller, Element } from 'react-scroll';
+import { Element } from 'react-scroll';
 
 import type { TwineBatchesItem } from 'types/api/twineL2';
 
@@ -28,7 +28,6 @@ interface Props {
 
 const TwineL2TxnBatchDetails = ({ query }: Props) => {
   const router = useRouter();
-  const [ isExpanded, setIsExpanded ] = React.useState(false);
 
   const { data, isPlaceholderData, isError, error } = query;
 
@@ -42,14 +41,6 @@ const TwineL2TxnBatchDetails = ({ query }: Props) => {
 
     router.push({ pathname: '/batches/[number]', query: { number: nextId } }, undefined);
   }, [ data, router ]);
-
-  const handleCutClick = React.useCallback(() => {
-    setIsExpanded((flag) => !flag);
-    scroller.scrollTo('TwineL2TxnBatchDetails__cutLink', {
-      duration: 500,
-      smooth: true,
-    });
-  }, []);
 
   if (isError) {
     if (isCustomAppError(error)) {
@@ -174,77 +165,102 @@ const TwineL2TxnBatchDetails = ({ query }: Props) => {
         <CopyToClipboard text={ data.root_hash }/>
       </DetailsInfoItem.Value>
 
-      { isExpanded && (
-        <>
-          { data.details.map((detail) => (
-            <React.Fragment key={ detail.chain_id }>
-              <GridItem colSpan={{ base: undefined, lg: 2 }} mt={ 4 }>
-                <Text fontWeight="500">Chain { detail.chain_id } Details</Text>
-              </GridItem>
+      <GridItem colSpan={{ base: undefined, lg: 2 }}>
+        <Element name="TwineL2TxnBatchDetails__cutLink"/>
+        { data.details.map((detail, index) => {
+          const chainName = isTwineChainId(detail.chain_id) ? TWINE_CHAIN_MAPPING[detail.chain_id].name : `Chain ${ detail.chain_id }`;
+          return (
+            <React.Fragment key={ index }>
+              <Grid
+                mt={ index === 0 ? 6 : 8 }
+                pb={ 6 }
+                borderBottom={ index < data.details.length - 1 ? '1px solid' : 'none' }
+                borderColor="divider"
+              >
+                <GridItem colSpan={ 2 } mb={ 4 }>
+                  <Text fontSize="lg" fontWeight="500">{ chainName } Details</Text>
+                </GridItem>
 
-              { detail.commit_transaction_hash && (
-                <>
+                <Grid
+                  columnGap={ 8 }
+                  rowGap={ 3 }
+                  templateColumns={{ base: 'minmax(0, 1fr)', lg: 'minmax(min-content, 200px) minmax(0, 1fr)' }}
+                >
+                  <DetailsInfoItem.Label>Chain ID</DetailsInfoItem.Label>
+                  <DetailsInfoItem.Value>{ detail.chain_id }</DetailsInfoItem.Value>
+
+                  <DetailsInfoItem.Label>Status</DetailsInfoItem.Label>
+                  <DetailsInfoItem.Value>
+                    <Tag
+                      size="sm"
+                      variant="solid"
+                      colorScheme={ detail.status === 'Executed on L1' ? 'green' : 'blue' }
+                    >
+                      { detail.status }
+                    </Tag>
+                  </DetailsInfoItem.Value>
+
+                  <DetailsInfoItem.Label>Transaction counts</DetailsInfoItem.Label>
+                  <DetailsInfoItem.Value>
+                    <Text as="span" mr={ 4 }>L1: { detail.l1_transaction_count }</Text>
+                    <Text as="span">L2: { detail.l2_transaction_count }</Text>
+                  </DetailsInfoItem.Value>
+
+                  <DetailsInfoItem.Label>Gas prices</DetailsInfoItem.Label>
+                  <DetailsInfoItem.Value>
+                    <Text as="span" mr={ 4 }>L1: { detail.l1_gas_price }</Text>
+                    <Text as="span">L2: { detail.l2_fair_gas_price }</Text>
+                  </DetailsInfoItem.Value>
+
+                  <DetailsInfoItemDivider/>
+
                   <DetailsInfoItem.Label>Commit transaction</DetailsInfoItem.Label>
                   <DetailsInfoItem.Value>
-                    <TruncatedValue value={ detail.commit_transaction_hash }/>
-                    <CopyToClipboard text={ detail.commit_transaction_hash }/>
-                    { detail.commit_transaction_timestamp && (
-                      <Text ml={ 3 } variant="secondary">
-                        <DetailsTimestamp timestamp={ detail.commit_transaction_timestamp }/>
-                      </Text>
-                    ) }
+                    <Flex alignItems="center" gap={ 3 }>
+                      <TruncatedValue value={ detail.commit_transaction_hash }/>
+                      <CopyToClipboard text={ detail.commit_transaction_hash }/>
+                      { detail.commit_transaction_timestamp && (
+                        <Text as="span" variant="secondary" whiteSpace="nowrap">
+                          2mo ago
+                        </Text>
+                      ) }
+                    </Flex>
                   </DetailsInfoItem.Value>
-                </>
-              ) }
 
-              { detail.prove_transaction_hash && (
-                <>
-                  <DetailsInfoItem.Label>Prove transaction</DetailsInfoItem.Label>
-                  <DetailsInfoItem.Value>
-                    <TruncatedValue value={ detail.prove_transaction_hash }/>
-                    <CopyToClipboard text={ detail.prove_transaction_hash }/>
-                    { detail.prove_transaction_timestamp && (
-                      <Text ml={ 3 } variant="secondary">
-                        <DetailsTimestamp timestamp={ detail.prove_transaction_timestamp }/>
-                      </Text>
-                    ) }
-                  </DetailsInfoItem.Value>
-                </>
-              ) }
+                  { detail.prove_transaction_hash && (
+                    <>
+                      <DetailsInfoItem.Label>Prove transaction</DetailsInfoItem.Label>
+                      <DetailsInfoItem.Value>
+                        <Flex alignItems="center" gap={ 3 }>
+                          <TruncatedValue value={ detail.prove_transaction_hash }/>
+                          <CopyToClipboard text={ detail.prove_transaction_hash }/>
+                          { detail.prove_transaction_timestamp && (
+                            <Text as="span" variant="secondary" whiteSpace="nowrap">
+                              2mo ago
+                            </Text>
+                          ) }
+                        </Flex>
+                      </DetailsInfoItem.Value>
+                    </>
+                  ) }
 
-              { detail.execute_transaction_hash && (
-                <>
                   <DetailsInfoItem.Label>Execute transaction</DetailsInfoItem.Label>
                   <DetailsInfoItem.Value>
-                    <TruncatedValue value={ detail.execute_transaction_hash }/>
-                    <CopyToClipboard text={ detail.execute_transaction_hash }/>
-                    { detail.execute_transaction_timestamp && (
-                      <Text ml={ 3 } variant="secondary">
-                        <DetailsTimestamp timestamp={ detail.execute_transaction_timestamp }/>
-                      </Text>
-                    ) }
+                    <Flex alignItems="center" gap={ 3 }>
+                      <TruncatedValue value={ detail.execute_transaction_hash }/>
+                      <CopyToClipboard text={ detail.execute_transaction_hash }/>
+                      { detail.execute_transaction_timestamp && (
+                        <Text as="span" variant="secondary" whiteSpace="nowrap">
+                          2mo ago
+                        </Text>
+                      ) }
+                    </Flex>
                   </DetailsInfoItem.Value>
-                </>
-              ) }
+                </Grid>
+              </Grid>
             </React.Fragment>
-          )) }
-        </>
-      ) }
-
-      <GridItem colSpan={{ base: undefined, lg: 2 }}>
-        <Element name="TwineL2TxnBatchDetails__cutLink">
-          <Skeleton isLoaded={ !isPlaceholderData } mt={ 6 } display="inline-block">
-            <Link
-              display="inline-block"
-              fontSize="sm"
-              textDecorationLine="underline"
-              textDecorationStyle="dashed"
-              onClick={ handleCutClick }
-            >
-              { isExpanded ? 'Hide details' : 'View details' }
-            </Link>
-          </Skeleton>
-        </Element>
+          );
+        }) }
       </GridItem>
     </Grid>
   );
