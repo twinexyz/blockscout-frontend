@@ -8,6 +8,7 @@ import type { TwineBatchesItem } from 'types/api/twineL2';
 
 import { route } from 'nextjs-routes';
 
+import { TWINE_CHAIN_MAPPING, isTwineChainId } from 'configs/app/features/twine';
 import type { ResourceError } from 'lib/api/resources';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import isCustomAppError from 'ui/shared/AppError/isCustomAppError';
@@ -99,15 +100,26 @@ const TwineL2TxnBatchDetails = ({ query }: Props) => {
       </DetailsInfoItem.Label>
       <DetailsInfoItem.Value>
         <Skeleton isLoaded={ !isPlaceholderData }>
-          <Flex gap={ 2 } flexWrap="wrap">
+          <Flex gap={ 2 } flexWrap="wrap" alignItems="center" justifyContent="center">
             { data.details.map((detail) => (
               <Tag
                 key={ detail.chain_id }
                 size="lg"
                 variant="solid"
                 colorScheme={ detail.status === 'Executed on L1' ? 'green' : 'blue' }
+                fontSize="sm"
+                textAlign="center"
+                display="flex"
+                justifyContent="center"
+                width="100%"
               >
-                <TagLabel>Chain { detail.chain_id }: { detail.status }</TagLabel>
+                <TagLabel>
+                  { isTwineChainId(detail.chain_id) ? (
+                    `${ TWINE_CHAIN_MAPPING[detail.chain_id].name } (${ detail.chain_id })`
+                  ) : (
+                    `Chain ${ detail.chain_id }`
+                  ) }: { detail.status }
+                </TagLabel>
               </Tag>
             )) }
           </Flex>

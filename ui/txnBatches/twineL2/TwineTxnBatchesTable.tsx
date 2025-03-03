@@ -18,12 +18,9 @@ const TwineTxnBatchesTable = ({ items, top, isLoading }: Props) => {
     <Table minW="1000px">
       <Thead top={ top }>
         <Tr>
-          <Th width="40%">Batch #</Th>
-          <Th width="60%">Status</Th>
-          <Th width="150px">Age</Th>
-          <Th width="150px">Txn count</Th>
-          <Th width="210px">Commit tx</Th>
-          <Th width="210px">Prove tx</Th>
+          <Th width="50%">Batch #</Th>
+          <Th width="50%">Age</Th>
+
         </Tr>
       </Thead>
       <Tbody>
