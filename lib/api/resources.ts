@@ -142,6 +142,7 @@ import type {
   TwineL2DepositsResponse,
   TwineL2WithdrawalsResponse,
   TwineBatchesResponse,
+  TwineBatch,
   TwineBatchTxs,
 } from 'types/api/twineL2';
 import type { TxInterpretationResponse } from 'types/api/txInterpretation';
@@ -1062,8 +1063,8 @@ export const RESOURCES = {
     filterFields: [],
   },
 
-  twine_l2_txn_batch_txs: {
-    path: '/api/v2/transactions/twine-batch/:number',
+  twine_l2_txn_batch: {
+    path: '/api/v2/twine/batches/:number',
     pathParams: [ 'number' as const ],
     filterFields: [],
   },
@@ -1268,7 +1269,7 @@ export type PaginatedResources = 'blocks' | 'block_txs' | 'block_election_reward
 'domains_lookup' | 'addresses_lookup' | 'user_ops' | 'validators_stability' | 'validators_blackfort' | 'noves_address_history' |
 'token_transfers_all' | 'scroll_l2_txn_batches' | 'scroll_l2_txn_batch_txs' | 'scroll_l2_txn_batch_blocks' |
 'scroll_l2_deposits' | 'scroll_l2_withdrawals' | 'advanced_filter' | 'pools' | 'twine_l2_deposits' | 'twine_l2_withdrawals' |
-'twine_l2_txn_batches' | 'twine_l2_txn_batch_txs';
+'twine_l2_txn_batches' | 'twine_l2_txn_batch';
 
 export type PaginatedResponse<Q extends PaginatedResources> = ResourcePayload<Q>;
 
@@ -1467,18 +1468,22 @@ Q extends 'pool' ? Pool :
 Q extends 'twine_l2_deposits' ? TwineL2DepositsResponse :
 Q extends 'twine_l2_withdrawals' ? TwineL2WithdrawalsResponse :
 Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse :
-Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
+Q extends 'twine_l2_txn_batch' ? TwineBatch :
 never;
 /* eslint-enable @stylistic/indent */
 
 export type ResourcePayload<Q extends ResourceName> = ResourcePayloadA<Q> | ResourcePayloadB<Q>;
 export type PaginatedResponseItems<Q extends ResourceName> = Q extends PaginatedResources ?
   Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse['batches'] :
-    Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs['items'] :
-      ResourcePayload<Q> extends { items: Array<unknown> } ? ResourcePayload<Q>['items'] :
-        never : never;
+    Q extends 'twine_l2_txn_batch' ? TwineBatch :
+      Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
+        ResourcePayload<Q> extends { items: Array<unknown> } ? ResourcePayload<Q>['items'] :
+          never : never;
 export type PaginatedResponseNextPageParams<Q extends ResourceName> = Q extends PaginatedResources ?
-    ResourcePayloadA<Q>['next_page_params'] | ResourcePayloadB<Q>['next_page_params'] :
+  Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse['next_page_params'] :
+    Q extends 'twine_l2_txn_batch' ? TwineBatch :
+      Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
+        ResourcePayloadA<Q>['next_page_params'] :
   never;
 
 /* eslint-disable @stylistic/indent */

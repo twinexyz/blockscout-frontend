@@ -25,11 +25,14 @@ const Batch = dynamic(() => {
       return import('ui/pages/ZkSyncL2TxnBatch');
     case 'scroll':
       return import('ui/pages/ScrollL2TxnBatch');
+    case 'twine':
+      return import('ui/pages/TwineL2TxnBatch');
   }
   throw new Error('Txn batches feature is not enabled.');
 }, { ssr: false });
 
 const Page: NextPage<Props> = (props: Props) => {
+
   return (
     <PageNextJs pathname="/batches/[number]" query={ props.query }>
       <Batch/>
