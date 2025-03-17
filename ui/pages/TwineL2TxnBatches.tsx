@@ -18,6 +18,7 @@ const TwineL2TxnBatches = () => {
     options: {
       placeholderData: {
         batches: Array(50).fill(TWINE_L2_TXN_BATCHES_ITEM),
+        items: null,
         next_page_params: {
           items_count: 50,
           number: 9045200,
@@ -31,6 +32,7 @@ const TwineL2TxnBatches = () => {
       placeholderData: {
         batches: [ TWINE_L2_TXN_BATCHES_ITEM ],
         next_page_params: null,
+        items: null,
       },
     },
   });

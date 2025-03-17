@@ -1069,6 +1069,12 @@ export const RESOURCES = {
     filterFields: [],
   },
 
+  twine_l2_txn_batch_txs: {
+    path: '/api/v2/transactions/batches/:number',
+    pathParams: [ 'number' as const ],
+    filterFields: [],
+  },
+
   // NOVES-FI
   noves_transaction: {
     path: '/api/v2/proxy/noves-fi/transactions/:hash',
@@ -1469,21 +1475,13 @@ Q extends 'twine_l2_deposits' ? TwineL2DepositsResponse :
 Q extends 'twine_l2_withdrawals' ? TwineL2WithdrawalsResponse :
 Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse :
 Q extends 'twine_l2_txn_batch' ? TwineBatch :
+Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
 never;
 /* eslint-enable @stylistic/indent */
-
 export type ResourcePayload<Q extends ResourceName> = ResourcePayloadA<Q> | ResourcePayloadB<Q>;
-export type PaginatedResponseItems<Q extends ResourceName> = Q extends PaginatedResources ?
-  Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse['batches'] :
-    Q extends 'twine_l2_txn_batch' ? TwineBatch :
-      Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
-        ResourcePayload<Q> extends { items: Array<unknown> } ? ResourcePayload<Q>['items'] :
-          never : never;
+export type PaginatedResponseItems<Q extends ResourceName> = Q extends PaginatedResources ? ResourcePayloadA<Q>['items'] | ResourcePayloadB<Q>['items'] : never;
 export type PaginatedResponseNextPageParams<Q extends ResourceName> = Q extends PaginatedResources ?
-  Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse['next_page_params'] :
-    Q extends 'twine_l2_txn_batch' ? TwineBatch :
-      Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :
-        ResourcePayloadA<Q>['next_page_params'] :
+  ResourcePayloadA<Q>['next_page_params'] | ResourcePayloadB<Q>['next_page_params'] :
   never;
 
 /* eslint-disable @stylistic/indent */

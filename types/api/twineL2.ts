@@ -80,6 +80,7 @@ export interface TwineBatchesItem {
 
 export type TwineBatchesResponse = {
   batches: Array<TwineBatchesItem>;
+  items: null;
   next_page_params: {
     number: number;
     items_count: number;
@@ -93,6 +94,8 @@ export interface TwineBatch extends TwineBatchesItem {
   prove_transaction_timestamp: string | null;
   status: TwineBatchStatus;
   transaction_count: number;
+  next_page_params: null;
+  items: null;
 }
 
 export type TwineBatchTxs = {
