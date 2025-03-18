@@ -1,4 +1,4 @@
-import { Grid, GridItem, Text, Link, Box, Tooltip } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Link, Box, Tooltip, Flex, Tag, TagLabel } from '@chakra-ui/react';
 import BigNumber from 'bignumber.js';
 import { capitalize } from 'es-toolkit';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import { ZKSYNC_L2_TX_BATCH_STATUSES } from 'types/api/zkSyncL2';
 import { route } from 'nextjs-routes';
 
 import config from 'configs/app';
+import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import getBlockReward from 'lib/block/getBlockReward';
 import { GWEI, WEI, WEI_IN_GWEI, ZERO } from 'lib/consts';
 import { space } from 'lib/html-entities';
@@ -300,6 +301,60 @@ const BlockDetails = ({ query }: Props) => {
             { data.zksync.batch_number ?
               <BatchEntityL2 isLoading={ isPlaceholderData } number={ data.zksync.batch_number }/> :
               <Skeleton isLoaded={ !isPlaceholderData }>Pending</Skeleton> }
+          </DetailsInfoItem.Value>
+        </>
+      ) }
+
+      { rollupFeature.isEnabled && rollupFeature.type === 'twine' && data.twine && (
+        <>
+          <DetailsInfoItem.Label
+            hint="Batch number"
+            isLoading={ isPlaceholderData }
+          >
+            Batch
+          </DetailsInfoItem.Label>
+          <DetailsInfoItem.Value>
+            { data.twine.number ?
+              <BatchEntityL2 isLoading={ isPlaceholderData } number={ data.twine.number }/> :
+              <Skeleton isLoaded={ !isPlaceholderData }>Pending</Skeleton> }
+          </DetailsInfoItem.Value>
+        </>
+      ) }
+      { rollupFeature.isEnabled && rollupFeature.type === 'twine' && data.twine && (
+        <>
+          <DetailsInfoItem.Label
+            hint="Status for each L1 chain"
+            isLoading={ isPlaceholderData }
+          >
+            L1 Statuses
+          </DetailsInfoItem.Label>
+          <DetailsInfoItem.Value>
+            <Skeleton isLoaded={ !isPlaceholderData }>
+              <Flex gap={ 2 } flexWrap="wrap" alignItems="center" justifyContent="center">
+                { data.twine.details.length === 0 && <Text>Batch status not available for this block</Text> }
+                { data.twine.details.map((detail) => (
+                  <Tag
+                    key={ detail.chain_id }
+                    size="lg"
+                    variant="solid"
+                    colorScheme={ detail.status === 'Executed on L1' ? 'green' : 'blue' }
+                    fontSize="sm"
+                    textAlign="center"
+                    display="flex"
+                    justifyContent="center"
+                    width="100%"
+                  >
+                    <TagLabel>
+                      { isTwineChainId(detail.chain_id) ? (
+                        `${ TWINE_CHAIN_MAPPING[detail.chain_id].name } (${ detail.chain_id })`
+                      ) : (
+                        `Chain ${ detail.chain_id }`
+                      ) }: { detail.status }
+                    </TagLabel>
+                  </Tag>
+                )) }
+              </Flex>
+            </Skeleton>
           </DetailsInfoItem.Value>
         </>
       ) }

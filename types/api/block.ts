@@ -6,6 +6,7 @@ import type { ArbitrumBatchStatus, ArbitrumL2TxData } from './arbitrumL2';
 import type { OptimisticL2BatchDataContainer, OptimisticL2BlobTypeEip4844, OptimisticL2BlobTypeCelestia } from './optimisticL2';
 import type { TokenInfo } from './token';
 import type { TokenTransfer } from './tokenTransfer';
+import type { TwineBatchesItem } from './twineL2';
 import type { ZkSyncBatchesItem } from './zkSyncL2';
 
 export type BlockType = 'block' | 'reorg' | 'uncle';
@@ -58,6 +59,15 @@ export interface Block {
   // ZKSYNC FIELDS
   zksync?: Omit<ZkSyncBatchesItem, 'number' | 'transaction_count' | 'timestamp'> & {
     batch_number: number | null;
+  };
+  // TWINE FIELDS
+  twine?: {
+    timestamp: string | null;
+    number: number | null;
+    details: Array<TwineBatchesItem['details'][number]>;
+    start_block: number | null;
+    end_block: number | null;
+    root_hash: string | null;
   };
   arbitrum?: ArbitrumBlockData;
   optimism?: OptimismBlockData;
