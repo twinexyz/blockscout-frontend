@@ -326,7 +326,7 @@ const BlockDetails = ({ query }: Props) => {
             hint="Status for each L1 chain"
             isLoading={ isPlaceholderData }
           >
-            L1 Statuses
+            L1 Status
           </DetailsInfoItem.Label>
           <DetailsInfoItem.Value>
             <Skeleton isLoaded={ !isPlaceholderData }>
