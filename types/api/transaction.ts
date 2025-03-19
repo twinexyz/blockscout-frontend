@@ -92,8 +92,15 @@ export type Transaction = {
   zksync?: Omit<ZkSyncBatchesItem, 'number' | 'transaction_count' | 'timestamp'> & {
     batch_number: number | null;
   };
-  // Twine fields
-  twine?: TwineTransactionData;
+  // TWINE FIELDS
+  twine?: {
+    timestamp: string | null;
+    number: number | null;
+    details: Array<TwineBatchesItem['details'][number]>;
+    start_block: number | null;
+    end_block: number | null;
+    root_hash: string | null;
+  };
   // Zilliqa fields
   zilliqa?: {
     is_scilla: boolean;
@@ -109,8 +116,6 @@ export type Transaction = {
   arbitrum?: ArbitrumTransactionData;
   scroll?: ScrollTransactionData;
 };
-
-type TwineTransactionData = Omit<TwineBatchesItem, 'number' | 'transaction_count' | 'timestamp'> & { batch_number: number | null };
 
 type ArbitrumTransactionData = {
   batch_number: number;

@@ -10,6 +10,7 @@ import {
   chakra,
   useColorModeValue,
   HStack,
+  TagLabel,
 } from '@chakra-ui/react';
 import BigNumber from 'bignumber.js';
 import React from 'react';
@@ -23,6 +24,7 @@ import { ZKSYNC_L2_TX_BATCH_STATUSES } from 'types/api/zkSyncL2';
 import { route } from 'nextjs-routes';
 
 import config from 'configs/app';
+import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import { WEI, WEI_IN_GWEI } from 'lib/consts';
 import getNetworkValidatorTitle from 'lib/networks/getNetworkValidatorTitle';
 import * as arbitrum from 'lib/rollups/arbitrum';
@@ -190,6 +192,60 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
           </Skeleton>
         ) }
       </DetailsInfoItem.Value>
+
+      { rollupFeature.isEnabled && rollupFeature.type === 'twine' && data.twine && (
+        <>
+          <DetailsInfoItem.Label
+            hint="Batch number"
+            isLoading={ isLoading }
+          >
+            Batch
+          </DetailsInfoItem.Label>
+          <DetailsInfoItem.Value>
+            { data.twine.number ?
+              <BatchEntityL2 isLoading={ isLoading } number={ data.twine.number }/> :
+              <Skeleton isLoaded={ !isLoading }>Pending</Skeleton> }
+          </DetailsInfoItem.Value>
+        </>
+      ) }
+      { rollupFeature.isEnabled && rollupFeature.type === 'twine' && data.twine && (
+        <>
+          <DetailsInfoItem.Label
+            hint="Status for each L1 chain"
+            isLoading={ isLoading }
+          >
+            L1 Status
+          </DetailsInfoItem.Label>
+          <DetailsInfoItem.Value>
+            <Skeleton isLoaded={ !isLoading }>
+              <Flex gap={ 2 } flexWrap="wrap" alignItems="center" justifyContent="center">
+                { data.twine.details.length === 0 && <Text>Batch status not available for this transaction</Text> }
+                { data.twine.details.map((detail) => (
+                  <Tag
+                    key={ detail.chain_id }
+                    size="lg"
+                    variant="solid"
+                    colorScheme={ detail.status === 'Executed on L1' ? 'green' : 'blue' }
+                    fontSize="sm"
+                    textAlign="center"
+                    display="flex"
+                    justifyContent="center"
+                    width="100%"
+                  >
+                    <TagLabel>
+                      { isTwineChainId(detail.chain_id) ? (
+                        `${ TWINE_CHAIN_MAPPING[detail.chain_id].name } (${ detail.chain_id })`
+                      ) : (
+                        `Chain ${ detail.chain_id }`
+                      ) }: { detail.status }
+                    </TagLabel>
+                  </Tag>
+                )) }
+              </Flex>
+            </Skeleton>
+          </DetailsInfoItem.Value>
+        </>
+      ) }
 
       { rollupFeature.isEnabled && rollupFeature.type === 'optimistic' && data.op_withdrawals && data.op_withdrawals.length > 0 &&
       !config.UI.views.tx.hiddenFields?.L1_status && (
