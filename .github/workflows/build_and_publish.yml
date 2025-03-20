@@ -21,7 +21,7 @@ env:
 
 jobs:
   build_and_push:
-    name: Build Image amd64
+    name: Build and Push Docker Image
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
@@ -68,4 +68,33 @@ jobs:
       - name: Handle build failure
         if: ${{ failure() }}
         run: echo "Build failed. Check logs for details."
+
+  deploy:
+    name: Deploy Latest Tag
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.3
+        with:
+          egress-policy: audit
+      - name: Checkout tools repo
+        uses: actions/checkout@v4
+        with:
+          repository: twinexyz/argocd
+          path: argocd
+          token: ${{ secrets.GH_ACTION_PAT  }}
+      - name: Update Tag in Helm Values for argocd
+        run: |
+            ls -al
+            cd argocd/apps/values/${{ env.REPO }} &&  sed -i "/tag:/s/tag:.*/tag: ${{ env.BRANCH }}-${GITHUB_SHA}/" staging-blockscout-frontend.yaml
+            git config --global user.email "devops@twinelabs.xyz"
+            git config --global user.name "twinebot"
+            git add .
+            git commit --allow-empty -m "updated image tag to ${GITHUB_SHA} for ${{ env.REPO }}"
+            git push origin main
+
+
 
