@@ -22,7 +22,7 @@ env:
 jobs:
   build_and_push:
     name: Build and Push Docker Image
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: read
@@ -71,7 +71,7 @@ jobs:
 
   deploy:
     name: Deploy Latest Tag
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs: ["build_and_push"]
     permissions:
       id-token: write
@@ -96,6 +96,3 @@ jobs:
             git add .
             git commit --allow-empty -m "updated image tag to ${GITHUB_SHA} for ${{ env.REPO }}"
             git push origin main
-
-
-
