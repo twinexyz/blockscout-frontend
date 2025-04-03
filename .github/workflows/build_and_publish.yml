@@ -22,7 +22,7 @@ env:
 jobs:
   build_and_push:
     name: Build and Push Docker Image
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write
       contents: read
@@ -71,7 +71,7 @@ jobs:
 
   deploy:
     name: Deploy Latest Tag
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: ["build_and_push"]
     permissions:
       id-token: write
