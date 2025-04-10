@@ -14,3 +14,11 @@ export type TwineChainId = keyof typeof TWINE_CHAIN_MAPPING;
 export const isTwineChainId = (chainId: string): chainId is TwineChainId => {
   return chainId in TWINE_CHAIN_MAPPING;
 };
+
+export const getExplorerBaseUrl = (chainId: string) => {
+  if (chainId === '900') {
+    return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/tx';
+  }
+
+  return TWINE_CHAIN_MAPPING[chainId as TwineChainId].explorer_url + '/tx';
+};
