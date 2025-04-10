@@ -36,6 +36,7 @@ import LinkInternal from 'ui/shared/links/LinkInternal';
 import PrevNext from 'ui/shared/PrevNext';
 import RawDataSnippet from 'ui/shared/RawDataSnippet';
 import StatusTag from 'ui/shared/statusTag/StatusTag';
+import { TwineIndividualChainDetails } from 'ui/shared/TwineIndividualChainDetails';
 import Utilization from 'ui/shared/Utilization/Utilization';
 import VerificationSteps from 'ui/shared/verificationSteps/VerificationSteps';
 import ZkSyncL2TxnBatchHashesInfo from 'ui/txnBatches/zkSyncL2/ZkSyncL2TxnBatchHashesInfo';
@@ -828,6 +829,7 @@ const BlockDetails = ({ query }: Props) => {
           ) }
         </>
       ) }
+      { data.twine && <TwineIndividualChainDetails chainDetails={ data.twine.details }/> }
     </Grid>
   );
 };
