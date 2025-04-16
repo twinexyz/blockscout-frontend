@@ -4,7 +4,7 @@ import { Element } from 'react-scroll';
 
 import type { TwineBatchesItem } from 'types/api/twineL2';
 
-import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
+import { isTwineChainId, TWINE_CHAIN_MAPPING, convertSolanaTxHashToBase58 } from 'configs/app/features/twine';
 import * as DetailsInfoItem from 'ui/shared/DetailsInfoItem';
 
 import CopyToClipboard from './CopyToClipboard';
@@ -16,6 +16,28 @@ import TruncatedValue from './TruncatedValue';
 interface Props {
   chainDetails: TwineBatchesItem['details'];
 }
+
+const truncateHash = (hash: string) => {
+  if (hash.length <= 12) return hash;
+  return `${ hash.slice(0, 10) }...${ hash.slice(-10) }`;
+};
+
+const formatTxHash = (chainId: string, txHash: string) => {
+
+  if (chainId === '900') {
+    const base58Hash = convertSolanaTxHashToBase58(txHash);
+    return truncateHash(base58Hash);
+  }
+  const formattedHash = txHash.startsWith('0x') ? txHash : `0x${ txHash }`;
+  return truncateHash(formattedHash);
+};
+
+const getClipBoardText = (chainId: string, txHash: string) => {
+  if (chainId === '900') {
+    return convertSolanaTxHashToBase58(txHash);
+  }
+  return txHash.startsWith('0x') ? txHash : `0x${ txHash }`;
+};
 
 export const TwineIndividualChainDetails = ({ chainDetails }: Props) => {
   return (
@@ -70,15 +92,17 @@ export const TwineIndividualChainDetails = ({ chainDetails }: Props) => {
 
                 <DetailsInfoItem.Label>Commit transaction</DetailsInfoItem.Label>
                 <DetailsInfoItem.Value>
-                  <Flex alignItems="center" gap={ 3 }>
-                    <TwineExternalLink href={ detail.commit_transaction_hash } chainId={ detail.chain_id }>
-                      <TruncatedValue value={ detail.commit_transaction_hash }/>
-                    </TwineExternalLink>
-                    <CopyToClipboard text={ detail.commit_transaction_hash }/>
+                  <Flex gap={ 3 } direction="column" >
+                    <div className="flex gap-3 items-center justify-center">
+                      <TwineExternalLink href={ detail.commit_transaction_hash } chainId={ detail.chain_id }>
+                        <TruncatedValue value={ formatTxHash(detail.chain_id, detail.commit_transaction_hash) }/>
+                      </TwineExternalLink>
+                      <CopyToClipboard text={ getClipBoardText(detail.chain_id, detail.commit_transaction_hash) }/>
+                    </div>
                     { detail.commit_transaction_timestamp && (
-                      <Text as="span" variant="secondary" whiteSpace="nowrap">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <DetailsTimestamp timestamp={ detail.commit_transaction_timestamp }/>
-                      </Text>
+                      </div>
                     ) }
                   </Flex>
                 </DetailsInfoItem.Value>
@@ -87,15 +111,17 @@ export const TwineIndividualChainDetails = ({ chainDetails }: Props) => {
                   <>
                     <DetailsInfoItem.Label>Prove transaction</DetailsInfoItem.Label>
                     <DetailsInfoItem.Value>
-                      <Flex alignItems="center" gap={ 3 }>
-                        <TwineExternalLink href={ detail.prove_transaction_hash } chainId={ detail.chain_id }>
-                          <TruncatedValue value={ detail.prove_transaction_hash }/>
-                        </TwineExternalLink>
-                        <CopyToClipboard text={ detail.prove_transaction_hash }/>
+                      <Flex gap={ 3 } direction="column" >
+                        <div className="flex gap-3 items-center justify-center">
+                          <TwineExternalLink href={ detail.prove_transaction_hash } chainId={ detail.chain_id }>
+                            <TruncatedValue value={ formatTxHash(detail.chain_id, detail.prove_transaction_hash) }/>
+                          </TwineExternalLink>
+                          <CopyToClipboard text={ getClipBoardText(detail.chain_id, detail.prove_transaction_hash) }/>
+                        </div>
                         { detail.prove_transaction_timestamp && (
-                          <Text as="span" variant="secondary" whiteSpace="nowrap">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <DetailsTimestamp timestamp={ detail.prove_transaction_timestamp }/>
-                          </Text>
+                          </div>
                         ) }
                       </Flex>
                     </DetailsInfoItem.Value>
@@ -104,15 +130,17 @@ export const TwineIndividualChainDetails = ({ chainDetails }: Props) => {
 
                 <DetailsInfoItem.Label>Execute transaction</DetailsInfoItem.Label>
                 <DetailsInfoItem.Value>
-                  <Flex alignItems="center" gap={ 3 }>
-                    <TwineExternalLink href={ detail.execute_transaction_hash } chainId={ detail.chain_id }>
-                      <TruncatedValue value={ detail.execute_transaction_hash }/>
-                    </TwineExternalLink>
-                    <CopyToClipboard text={ detail.execute_transaction_hash }/>
+                  <Flex gap={ 3 } direction="column" >
+                    <div className="flex gap-3 items-center justify-center">
+                      <TwineExternalLink href={ detail.execute_transaction_hash } chainId={ detail.chain_id }>
+                        <TruncatedValue value={ formatTxHash(detail.chain_id, detail.execute_transaction_hash) }/>
+                      </TwineExternalLink>
+                      <CopyToClipboard text={ getClipBoardText(detail.chain_id, detail.execute_transaction_hash) }/>
+                    </div>
                     { detail.execute_transaction_timestamp && (
-                      <Text as="span" variant="secondary" whiteSpace="nowrap">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <DetailsTimestamp timestamp={ detail.execute_transaction_timestamp }/>
-                      </Text>
+                      </div>
                     ) }
                   </Flex>
                 </DetailsInfoItem.Value>

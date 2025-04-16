@@ -2,7 +2,7 @@ import type { LinkProps } from '@chakra-ui/react';
 import { Link, chakra, Box } from '@chakra-ui/react';
 import React from 'react';
 
-import { getExplorerBaseUrl } from 'configs/app/features/twine';
+import { getExplorerTxUrl } from 'configs/app/features/twine';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import IconSvg from 'ui/shared/IconSvg';
 
@@ -46,10 +46,10 @@ const TwineExternalLink = ({ href, children, className, isLoading, variant, icon
     );
   }
 
-  const explorerBaseUrl = getExplorerBaseUrl(chainId);
+  const explorerTxUrl = getExplorerTxUrl(chainId, href);
 
   return (
-    <Link className={ className } { ...styleProps } target="_blank" href={ `${ explorerBaseUrl }/${ href }` } onClick={ onClick }>
+    <Link className={ className } { ...styleProps } target="_blank" href={ explorerTxUrl } onClick={ onClick }>
       { children }
       <IconSvg name="link_external" boxSize={ 3 } verticalAlign="middle" color={ iconColor ?? 'icon_link_external' } flexShrink={ 0 }/>
     </Link>
