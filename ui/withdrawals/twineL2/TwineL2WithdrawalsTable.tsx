@@ -7,19 +7,22 @@ import { default as Thead } from 'ui/shared/TheadSticky';
 
 import TwineWithdrawalsTableItem from './TwineL2WithdrawalsTableItem';
 
- type Props = {
-   items: Array<TwineL2WithdrawalsItem>;
-   top: number;
-   isLoading?: boolean;
- };
+type Props = {
+  items: Array<TwineL2WithdrawalsItem>;
+  top: number;
+  isLoading?: boolean;
+};
 
-const TwineDepositsTable = ({ items, top, isLoading }: Props) => {
+const TwineWithdrawalsTable = ({ items, top, isLoading }: Props) => {
   return (
-    <Table style={{ tableLayout: 'auto' }} minW="950px">
+    <Table style={{ tableLayout: 'auto' }} minW="1100px">
       <Thead top={ top }>
         <Tr>
+          <Th>Chain</Th>
           <Th>Block No.</Th>
-          <Th>Txn hash</Th>
+          <Th>Slot No.</Th>
+          <Th>L1 Txn hash</Th>
+          <Th>L2 Txn hash</Th>
           <Th>Age</Th>
           <Th>L1 Token Address</Th>
           <Th>L2 Token Address</Th>
@@ -29,11 +32,11 @@ const TwineDepositsTable = ({ items, top, isLoading }: Props) => {
       </Thead>
       <Tbody>
         { items.map((item, index) => (
-          <TwineWithdrawalsTableItem key={ item.tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
+          <TwineWithdrawalsTableItem key={ item.l1_tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
         )) }
       </Tbody>
     </Table>
   );
 };
 
-export default TwineDepositsTable;
+export default TwineWithdrawalsTable;

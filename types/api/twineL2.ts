@@ -36,10 +36,13 @@ export type TwineL2DepositsResponse = {
 };
 
 export type TwineL2WithdrawalsItem = {
-  tx_hash: string;
+  l1_tx_hash: string;
+  l2_tx_hash: string;
+  slot_number: number | null;
+  l2_slot_number: number;
+  block_number: number;
   nonce: number;
   chain_id: number;
-  block_number: number;
   l1_token: string;
   l2_token: string;
   from: string;
