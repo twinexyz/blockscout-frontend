@@ -2,7 +2,7 @@ import type { LinkProps } from '@chakra-ui/react';
 import { Link, chakra, Box } from '@chakra-ui/react';
 import React from 'react';
 
-import { getExplorerTxUrl } from 'configs/app/features/twine';
+import { getExplorerBlockUrl, getExplorerTxUrl } from 'configs/app/features/twine';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import IconSvg from 'ui/shared/IconSvg';
 
@@ -18,9 +18,10 @@ interface Props {
   iconColor?: LinkProps['color'];
   onClick?: LinkProps['onClick'];
   chainId: string;
+  type?: 'tx' | 'block';
 }
 
-const TwineExternalLink = ({ href, children, className, isLoading, variant, iconColor, onClick, chainId }: Props) => {
+const TwineExternalLink = ({ href, children, className, isLoading, variant, iconColor, onClick, chainId, type = 'tx' }: Props) => {
   const commonProps = {
     display: 'inline-block',
     alignItems: 'center',
@@ -46,10 +47,10 @@ const TwineExternalLink = ({ href, children, className, isLoading, variant, icon
     );
   }
 
-  const explorerTxUrl = getExplorerTxUrl(chainId, href);
+  const externalUrl = type === 'tx' ? getExplorerTxUrl(chainId, href) : getExplorerBlockUrl(chainId, href);
 
   return (
-    <Link className={ className } { ...styleProps } target="_blank" href={ explorerTxUrl } onClick={ onClick }>
+    <Link className={ className } { ...styleProps } target="_blank" href={ externalUrl } onClick={ onClick }>
       { children }
       <IconSvg name="link_external" boxSize={ 3 } verticalAlign="middle" color={ iconColor ?? 'icon_link_external' } flexShrink={ 0 }/>
     </Link>

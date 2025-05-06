@@ -11,10 +11,13 @@ export const TWINE_L2_TX_BATCH_STATUSES = [
 export type TwineBatchStatus = typeof TWINE_L2_TX_BATCH_STATUSES[number];
 
 export type TwineL2DepositsItem = {
-  tx_hash: string;
+  l1_tx_hash: string;
+  l2_tx_hash: string;
+  slot_number: number | null;
+  l2_slot_number: number;
+  block_number: number;
   nonce: number;
   chain_id: number;
-  block_number: number;
   l1_token: string;
   l2_token: string;
   from: string;

@@ -26,6 +26,16 @@ export const getExplorerTxUrl = (chainId: string, txHash: string) => {
   return TWINE_CHAIN_MAPPING[chainId as TwineChainId].explorer_url + '/tx/' + (txHash.startsWith('0x') ? txHash : '0x' + txHash);
 };
 
+export const getExplorerBlockUrl = (chainId: string, blockNumber: string) => {
+  // Solana explorer
+  if (chainId === '900') {
+    return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/block/' + blockNumber + '?cluster=devnet';
+  }
+
+  // Ethereum explorer
+  return TWINE_CHAIN_MAPPING[chainId as TwineChainId].explorer_url + '/block/' + blockNumber;
+};
+
 export const convertSolanaTxHashToBase58 = (txHash: string) => {
   // Convert hex string to Uint8Array
   const bytes = new Uint8Array(txHash.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);

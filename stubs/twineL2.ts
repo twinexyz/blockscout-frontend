@@ -1,7 +1,10 @@
-import type { TwineL2DepositsItem, TwineBatchesItem } from 'types/api/twineL2';
+import type { TwineL2DepositsItem, TwineBatchesItem, TwineL2WithdrawalsItem } from 'types/api/twineL2';
 
 export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
-  tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+  l1_tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+  l2_tx_hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+  slot_number: null,
+  l2_slot_number: 123,
   nonce: 26,
   chain_id: 17000,
   block_number: 671,
@@ -13,7 +16,7 @@ export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
   created_at: '2025-02-04T08:00:12.123456Z',
 };
 
-export const TWINE_WITHDRAWAL_ITEM: TwineL2DepositsItem = {
+export const TWINE_WITHDRAWAL_ITEM: TwineL2WithdrawalsItem = {
   tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
   nonce: 26,
   chain_id: 17000,
