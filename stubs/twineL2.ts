@@ -53,7 +53,7 @@ export const TWINE_L2_TXN_BATCHES_ITEM: TwineBatchesItem = {
     },
     {
       id: 1,
-      chain_id: '900',
+      chain_id: '103',
       status: 'Executed on L1',
       l1_gas_price: '15000000000',
       l1_transaction_count: 100,

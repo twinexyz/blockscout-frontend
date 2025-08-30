@@ -3,6 +3,14 @@ export const TWINE_CHAIN_MAPPING = {
     name: 'Holesky',
     explorer_url: 'https://holesky.etherscan.io',
   },
+  '103': {
+    name: 'Solana',
+    explorer_url: 'https://explorer.solana.com',
+  },
+  '11155111': {
+    name: 'Sepolia',
+    explorer_url: 'https://sepolia.etherscan.io',
+  },
   '900': {
     name: 'Solana',
     explorer_url: 'https://explorer.solana.com',
@@ -17,8 +25,8 @@ export const isTwineChainId = (chainId: string): chainId is TwineChainId => {
 
 export const getExplorerTxUrl = (chainId: string, txHash: string) => {
   // Solana explorer
-  if (chainId === '900') {
-    return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/tx/' + convertSolanaTxHashToBase58(txHash) + '?cluster=devnet';
+  if (chainId === '103' || chainId === '900') {
+    return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/tx/' + (txHash) + '?cluster=devnet';
   }
 
   // Ethereum explorer
@@ -28,12 +36,23 @@ export const getExplorerTxUrl = (chainId: string, txHash: string) => {
 
 export const getExplorerBlockUrl = (chainId: string, blockNumber: string) => {
   // Solana explorer
-  if (chainId === '900') {
+  if (chainId === '103') {
     return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/block/' + blockNumber + '?cluster=devnet';
   }
 
   // Ethereum explorer
   return TWINE_CHAIN_MAPPING[chainId as TwineChainId].explorer_url + '/block/' + blockNumber;
+};
+
+export const getExplorerAddressUrl = (chainId: string, address: string) => {
+  // Solana explorer
+  if (chainId === '103' || chainId === '900') {
+    return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/address/' + address + '?cluster=devnet';
+  }
+
+  // Ethereum explorer
+  // append 0x to the address if it doesn't already have it
+  return TWINE_CHAIN_MAPPING[chainId as TwineChainId].explorer_url + '/address/' + (address.startsWith('0x') ? address : '0x' + address);
 };
 
 export const convertSolanaTxHashToBase58 = (txHash: string) => {

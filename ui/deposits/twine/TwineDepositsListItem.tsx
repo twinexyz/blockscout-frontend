@@ -84,7 +84,7 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Token Address</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+        <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.l1_token, 8) }
         </TwineExternalLink>
       </ListItemMobileGrid.Value>
@@ -99,7 +99,7 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
       </ListItemMobileGrid.Value>
       <ListItemMobileGrid.Label isLoading={ isLoading }>From</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+        <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.from, 8) }
         </TwineExternalLink>
       </ListItemMobileGrid.Value>

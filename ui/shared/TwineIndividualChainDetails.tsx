@@ -4,7 +4,7 @@ import { Element } from 'react-scroll';
 
 import type { TwineBatchesItem } from 'types/api/twineL2';
 
-import { isTwineChainId, TWINE_CHAIN_MAPPING, convertSolanaTxHashToBase58 } from 'configs/app/features/twine';
+import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import * as DetailsInfoItem from 'ui/shared/DetailsInfoItem';
 
 import CopyToClipboard from './CopyToClipboard';
@@ -24,8 +24,8 @@ const truncateHash = (hash: string) => {
 
 const formatTxHash = (chainId: string, txHash: string) => {
 
-  if (chainId === '900') {
-    const base58Hash = convertSolanaTxHashToBase58(txHash);
+  if (chainId === '103' || chainId === '900') {
+    const base58Hash = (txHash);
     return truncateHash(base58Hash);
   }
   const formattedHash = txHash.startsWith('0x') ? txHash : `0x${ txHash }`;
@@ -33,9 +33,10 @@ const formatTxHash = (chainId: string, txHash: string) => {
 };
 
 const getClipBoardText = (chainId: string, txHash: string) => {
-  if (chainId === '900') {
-    return convertSolanaTxHashToBase58(txHash);
+  if (chainId === '103' || chainId === '900') {
+    return (txHash);
   }
+
   return txHash.startsWith('0x') ? txHash : `0x${ txHash }`;
 };
 

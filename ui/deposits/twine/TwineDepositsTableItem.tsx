@@ -20,7 +20,7 @@ const TwineDepositsTableItem = ({ item, isLoading }: Props) => {
     return null;
   }
 
-  const isSolana = isTwineChainId(String(item.chain_id)) && item.chain_id === 900;
+  const isSolana = isTwineChainId(String(item.chain_id)) && (item.chain_id === 900 || item.chain_id === 103);
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainName = TWINE_CHAIN_MAPPING[chainKey]?.name || String(item.chain_id);
 
@@ -72,7 +72,7 @@ const TwineDepositsTableItem = ({ item, isLoading }: Props) => {
       </Td>
 
       <Td verticalAlign="middle">
-        <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+        <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.l1_token, 8) }
         </TwineExternalLink>
       </Td>
@@ -85,7 +85,7 @@ const TwineDepositsTableItem = ({ item, isLoading }: Props) => {
         />
       </Td>
       <Td verticalAlign="middle">
-        <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+        <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.from, 8) }
         </TwineExternalLink>
       </Td>

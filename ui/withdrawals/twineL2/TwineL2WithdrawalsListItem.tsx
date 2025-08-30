@@ -79,22 +79,19 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Token Address</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+        <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.l1_token, 8) }
         </TwineExternalLink>
       </ListItemMobileGrid.Value>
       <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Token Address</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <AddressEntity
-          address={{ hash: item.l2_token, name: '', is_contract: false, is_verified: false, ens_domain_name: null, implementations: null }}
-          isLoading={ isLoading }
-          truncation="constant"
-          noCopy
-        />
+        <TwineExternalLink href={ item.l2_token } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
+          { shortenString(item.l2_token, 8) }
+        </TwineExternalLink>
       </ListItemMobileGrid.Value>
       <ListItemMobileGrid.Label isLoading={ isLoading }>From</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+        <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.from, 8) }
         </TwineExternalLink>
       </ListItemMobileGrid.Value>
