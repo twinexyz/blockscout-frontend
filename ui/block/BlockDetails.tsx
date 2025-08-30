@@ -827,6 +827,44 @@ const BlockDetails = ({ query }: Props) => {
               ) }
             </>
           ) }
+
+          { data.da && (
+            <>
+              <DetailsInfoItemDivider/>
+              <DetailsInfoItem.Label
+                hint="Data Availability information for Celestia"
+              >
+                Data Availability
+              </DetailsInfoItem.Label>
+              <DetailsInfoItem.Value>
+                { data.da.celestia.commitment_hash ? (
+                  <Flex direction="column" gap={ 2 }>
+                    <Box>
+                      <Text fontWeight="medium">Commitment Hash:</Text>
+                      <Flex alignItems="center" gap={ 2 }>
+                        <HashStringShortenDynamic hash={ data.da.celestia.commitment_hash }/>
+                        <CopyToClipboard text={ data.da.celestia.commitment_hash }/>
+                      </Flex>
+                    </Box>
+                    { data.da.celestia.namespace && (
+                      <Box>
+                        <Text fontWeight="medium">Namespace:</Text>
+                        <Text>{ data.da.celestia.namespace }</Text>
+                      </Box>
+                    ) }
+                    { data.da.celestia.height && (
+                      <Box>
+                        <Text fontWeight="medium">Height:</Text>
+                        <Text>{ data.da.celestia.height }</Text>
+                      </Box>
+                    ) }
+                  </Flex>
+                ) : (
+                  <Text>Not committed to Celestia yet</Text>
+                ) }
+              </DetailsInfoItem.Value>
+            </>
+          ) }
         </>
       ) }
       { data.twine && <TwineIndividualChainDetails chainDetails={ data.twine.details }/> }
