@@ -1,7 +1,10 @@
-import type { TwineL2DepositsItem, TwineBatchesItem } from 'types/api/twineL2';
+import type { TwineL2DepositsItem, TwineBatchesItem, TwineL2WithdrawalsItem } from 'types/api/twineL2';
 
 export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
-  tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+  l1_tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+  l2_tx_hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+  slot_number: null,
+  l2_slot_number: 123,
   nonce: 26,
   chain_id: 17000,
   block_number: 671,
@@ -13,17 +16,20 @@ export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
   created_at: '2025-02-04T08:00:12.123456Z',
 };
 
-export const TWINE_WITHDRAWAL_ITEM: TwineL2DepositsItem = {
-  tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-  nonce: 26,
+export const TWINE_WITHDRAWAL_ITEM: TwineL2WithdrawalsItem = {
+  l1_tx_hash: '0x10b1bb8e4fd372eef2737342d9ea622e2ab7a3a9293cc80e46f4fc2c325cfef7',
+  l2_tx_hash: '0x0195cb6f6d5e44ad9a0a29005d9e6bc21e68ed5a167503f122e2b32173bceef3',
+  slot_number: null,
+  l2_slot_number: 3612114,
+  block_number: 3612114,
+  nonce: 6,
   chain_id: 17000,
-  block_number: 671,
   l1_token: '0x0000000000000000000000000000000000000000',
-  l2_token: '0xa8d297d643a11ce83b432e87eebce6bee0fd2bab',
-  from: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
-  to_twine_address: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
-  amount: '1500000000000000000',
-  created_at: '2025-02-04T08:00:12.123456Z',
+  l2_token: '0x3f22d27e4b8637cb430d7371d121dd37febe3c71',
+  from: '0xf9ccb674b4455f7c49cd119fde6c2208f0ed4976',
+  to_twine_address: '0xf9ccb674b4455f7c49cd119fde6c2208f0ed4976',
+  amount: '10000000000000000',
+  created_at: '2025-04-25T04:00:24.070256Z',
 };
 
 export const TWINE_L2_TXN_BATCHES_ITEM: TwineBatchesItem = {
@@ -47,7 +53,7 @@ export const TWINE_L2_TXN_BATCHES_ITEM: TwineBatchesItem = {
     },
     {
       id: 1,
-      chain_id: '900',
+      chain_id: '103',
       status: 'Executed on L1',
       l1_gas_price: '15000000000',
       l1_transaction_count: 100,

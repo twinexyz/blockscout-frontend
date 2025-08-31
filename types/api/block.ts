@@ -69,6 +69,12 @@ export interface Block {
     end_block: number | null;
     root_hash: string | null;
   };
+
+  // DA FIELDS
+  da?: {
+    celestia: CelestiaData;
+  };
+
   arbitrum?: ArbitrumBlockData;
   optimism?: OptimismBlockData;
   // CELO FIELDS
@@ -80,6 +86,12 @@ export interface Block {
   // ZILLIQA FIELDS
   zilliqa?: ZilliqaBlockData;
 }
+
+type CelestiaData = {
+  namespace: string;
+  commitment_hash: string;
+  height: number;
+};
 
 type ArbitrumBlockData = {
   batch_number: number;
