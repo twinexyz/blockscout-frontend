@@ -50,6 +50,8 @@ export const TWINE_L2_TXN_BATCHES_ITEM: TwineBatchesItem = {
       execute_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
       prove_transaction_hash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
       prove_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+      finalize_transaction_hash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+      finalize_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
     },
     {
       id: 1,
@@ -65,6 +67,8 @@ export const TWINE_L2_TXN_BATCHES_ITEM: TwineBatchesItem = {
       execute_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
       prove_transaction_hash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
       prove_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
+      finalize_transaction_hash: '0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba',
+      finalize_transaction_timestamp: '2025-02-04T08:00:12.123456Z',
     },
   ],
   start_block: 1000,
