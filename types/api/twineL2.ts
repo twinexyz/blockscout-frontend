@@ -72,6 +72,8 @@ export interface TwineBatchesDetails {
   execute_transaction_timestamp: string;
   prove_transaction_hash: string | null;
   prove_transaction_timestamp: string | null;
+  finalize_transaction_hash: string | null;
+  finalize_transaction_timestamp: string | null;
   status: TwineBatchStatus;
 }
 

@@ -24,6 +24,8 @@ export const isTwineChainId = (chainId: string): chainId is TwineChainId => {
 };
 
 export const getExplorerTxUrl = (chainId: string, txHash: string) => {
+  if (!txHash) return '';
+
   // Solana explorer
   if (chainId === '103' || chainId === '900') {
     return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/tx/' + (txHash) + '?cluster=devnet';
