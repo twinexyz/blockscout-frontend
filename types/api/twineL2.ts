@@ -10,12 +10,19 @@ export const TWINE_L2_TX_BATCH_STATUSES = [
 
 export type TwineBatchStatus = typeof TWINE_L2_TX_BATCH_STATUSES[number];
 
+export const TWINE_L2_DEPOSIT_STATUS = {
+  FAILED: 0,
+  SUCCESS: 1,
+} as const;
+
+export type TwineL2DepositStatus = typeof TWINE_L2_DEPOSIT_STATUS[keyof typeof TWINE_L2_DEPOSIT_STATUS];
+
 export type TwineL2DepositsItem = {
   l1_tx_hash: string;
   l2_tx_hash: string;
-  slot_number: number | null;
-  l2_slot_number: number;
-  block_number: number;
+  l1_block_height: number;
+  l2_block_height: number;
+  status: TwineL2DepositStatus;
   nonce: number;
   chain_id: number;
   l1_token: string;
@@ -30,17 +37,24 @@ export type TwineL2DepositsResponse = {
   items: Array<TwineL2DepositsItem>;
   next_page_params: {
     items_count: number;
-    l1_block_number: number;
-    transaction_hash: string;
+    chain_id: number;
+    nonce: string;
   };
 };
+
+export const TWINE_L2_WITHDRAWAL_STATUS = {
+  FAILED: 0,
+  SUCCESS: 1,
+} as const;
+
+export type TwineL2WithdrawalStatus = typeof TWINE_L2_WITHDRAWAL_STATUS[keyof typeof TWINE_L2_WITHDRAWAL_STATUS];
 
 export type TwineL2WithdrawalsItem = {
   l1_tx_hash: string;
   l2_tx_hash: string;
-  slot_number: number | null;
-  l2_slot_number: number;
-  block_number: number;
+  l1_block_height: number;
+  l2_block_height: number;
+  status: TwineL2WithdrawalStatus;
   nonce: number;
   chain_id: number;
   l1_token: string;

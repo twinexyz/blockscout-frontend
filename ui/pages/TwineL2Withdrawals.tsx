@@ -4,12 +4,12 @@ import React from 'react';
 import { rightLineArrow, nbsp } from 'lib/html-entities';
 import { TWINE_WITHDRAWAL_ITEM } from 'stubs/twineL2';
 import { generateListStub } from 'stubs/utils';
-import TwineDepositsListItem from 'ui/deposits/twine/TwineDepositsListItem';
-import TwineDepositsTable from 'ui/deposits/twine/TwineDepositsTable';
 import { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import PageTitle from 'ui/shared/Page/PageTitle';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
+import TwineWithdrawalsListItem from 'ui/withdrawals/twineL2/TwineL2WithdrawalsListItem';
+import TwineWithdrawalsTable from 'ui/withdrawals/twineL2/TwineL2WithdrawalsTable';
 
 const TwineL2Withdrawals = () => {
   const { data, isError, isPlaceholderData, pagination } = useQueryWithPages({
@@ -32,7 +32,7 @@ const TwineL2Withdrawals = () => {
     <>
       <Show below="lg" ssr={ false }>
         { data.items.map(((item, index) => (
-          <TwineDepositsListItem
+          <TwineWithdrawalsListItem
             key={ item.l2_tx_hash + (isPlaceholderData ? index : '') }
             isLoading={ isPlaceholderData }
             item={ item }
@@ -40,7 +40,7 @@ const TwineL2Withdrawals = () => {
         ))) }
       </Show>
       <Hide below="lg" ssr={ false }>
-        <TwineDepositsTable items={ data.items } top={ pagination.isVisible ? ACTION_BAR_HEIGHT_DESKTOP : 0 } isLoading={ isPlaceholderData }/>
+        <TwineWithdrawalsTable items={ data.items } top={ pagination.isVisible ? ACTION_BAR_HEIGHT_DESKTOP : 0 } isLoading={ isPlaceholderData }/>
       </Hide>
     </>
   ) : null;

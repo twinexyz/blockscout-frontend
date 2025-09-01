@@ -38,7 +38,7 @@ export const getExplorerTxUrl = (chainId: string, txHash: string) => {
 
 export const getExplorerBlockUrl = (chainId: string, blockNumber: string) => {
   // Solana explorer
-  if (chainId === '103') {
+  if (chainId === '103' || chainId === '900') {
     return TWINE_CHAIN_MAPPING[chainId].explorer_url + '/block/' + blockNumber + '?cluster=devnet';
   }
 

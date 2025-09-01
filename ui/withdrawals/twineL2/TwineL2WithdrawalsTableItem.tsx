@@ -7,6 +7,7 @@ import config from 'configs/app';
 import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import shortenString from 'lib/shortenString';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
+import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 import TwineExternalLink from 'ui/shared/links/TwineExternalLink';
 import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
 
@@ -22,6 +23,8 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
   const isSolana = isTwineChainId(String(item.chain_id)) && item.chain_id === 900;
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainName = TWINE_CHAIN_MAPPING[chainKey]?.name || String(item.chain_id);
+  const statusText = item.status === 1 ? 'Success' : 'Failed';
+  const statusColorScheme = item.status === 1 ? 'green' : 'red';
 
   return (
     <Tr>
@@ -29,22 +32,17 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
         <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
       </Td>
       <Td verticalAlign="middle">
-        { !isSolana && item.block_number ? (
-          <TwineExternalLink href={ item.block_number } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
-            { item.block_number }
-          </TwineExternalLink>
-        ) : (
-          <span>-</span>
-        ) }
+        <TwineExternalLink href={ item.l1_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
+          { item.l1_block_height }
+        </TwineExternalLink>
       </Td>
       <Td verticalAlign="middle">
-        { isSolana && item.slot_number ? (
-          <TwineExternalLink href={ item.slot_number } chainId={ String(item.chain_id) } type="slot" isLoading={ isLoading }>
-            { item.slot_number }
-          </TwineExternalLink>
-        ) : (
-          <span>-</span>
-        ) }
+        <BlockEntity
+          number={ item.l2_block_height }
+          isLoading={ isLoading }
+          fontSize="sm"
+          lineHeight={ 5 }
+        />
       </Td>
       <Td verticalAlign="middle">
         <TwineExternalLink href={ item.l1_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
@@ -63,6 +61,9 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
           color="text_secondary"
           display="inline-block"
         />
+      </Td>
+      <Td verticalAlign="middle">
+        <Badge colorScheme={ statusColorScheme }>{ statusText }</Badge>
       </Td>
       <Td verticalAlign="middle">
         <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>

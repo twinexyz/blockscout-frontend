@@ -21,8 +21,8 @@ const TwineL2Deposits = () => {
         {
           next_page_params: {
             items_count: 50,
-            l1_block_number: 9045200,
-            transaction_hash: '',
+            chain_id: 9045200,
+            nonce: '',
           },
         },
       ),

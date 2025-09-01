@@ -1,11 +1,13 @@
+import { Badge } from '@chakra-ui/react';
 import React from 'react';
 
 import type { TwineL2WithdrawalsItem } from 'types/api/twineL2';
 
 import config from 'configs/app';
-import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
+import { TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import shortenString from 'lib/shortenString';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
+import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 import TwineExternalLink from 'ui/shared/links/TwineExternalLink';
 import ListItemMobileGrid from 'ui/shared/ListItemMobile/ListItemMobileGrid';
 import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
@@ -19,9 +21,10 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
     return null;
   }
 
-  const isSolana = isTwineChainId(String(item.chain_id)) && item.chain_id === 900;
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainName = TWINE_CHAIN_MAPPING[chainKey]?.name || String(item.chain_id);
+  const statusText = item.status === 1 ? 'Success' : 'Failed';
+  const statusColorScheme = item.status === 1 ? 'green' : 'red';
 
   return (
     <ListItemMobileGrid.Container>
@@ -32,26 +35,21 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         { chainName }
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Block number</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Block Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        { !isSolana && item.block_number ? (
-          <TwineExternalLink href={ item.block_number } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
-            { item.block_number }
-          </TwineExternalLink>
-        ) : (
-          <span>-</span>
-        ) }
+        <TwineExternalLink href={ item.l1_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
+          { item.l1_block_height }
+        </TwineExternalLink>
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Slot number</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Block Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        { isSolana && item.slot_number ? (
-          <TwineExternalLink href={ item.slot_number } chainId={ String(item.chain_id) } type="slot" isLoading={ isLoading }>
-            { item.slot_number }
-          </TwineExternalLink>
-        ) : (
-          <span>-</span>
-        ) }
+        <BlockEntity
+          number={ item.l2_block_height }
+          isLoading={ isLoading }
+          fontSize="sm"
+          lineHeight={ 5 }
+        />
       </ListItemMobileGrid.Value>
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Tx Hash</ListItemMobileGrid.Label>
@@ -75,6 +73,11 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
           isLoading={ isLoading }
           display="inline-block"
         />
+      </ListItemMobileGrid.Value>
+
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Status</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Value>
+        <Badge colorScheme={ statusColorScheme }>{ statusText }</Badge>
       </ListItemMobileGrid.Value>
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Token Address</ListItemMobileGrid.Label>
