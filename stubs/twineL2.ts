@@ -1,4 +1,4 @@
-import type { TwineL2DepositsItem, TwineBatchesItem, TwineL2WithdrawalsItem } from 'types/api/twineL2';
+import type { TwineL2DepositsItem, TwineBatchesItem, TwineL2WithdrawalsItem, TwineL1WithdrawalsItem } from 'types/api/twineL2';
 
 export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
   l1_tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
@@ -17,6 +17,22 @@ export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
 };
 
 export const TWINE_WITHDRAWAL_ITEM: TwineL2WithdrawalsItem = {
+  l1_tx_hash: '0x10b1bb8e4fd372eef2737342d9ea622e2ab7a3a9293cc80e46f4fc2c325cfef7',
+  l2_tx_hash: '0x0195cb6f6d5e44ad9a0a29005d9e6bc21e68ed5a167503f122e2b32173bceef3',
+  l1_block_height: 123,
+  l2_block_height: 123,
+  status: 1,
+  nonce: 6,
+  chain_id: 17000,
+  l1_token: '0x0000000000000000000000000000000000000000',
+  l2_token: '0x3f22d27e4b8637cb430d7371d121dd37febe3c71',
+  from: '0xf9ccb674b4455f7c49cd119fde6c2208f0ed4976',
+  to_twine_address: '0xf9ccb674b4455f7c49cd119fde6c2208f0ed4976',
+  amount: '10000000000000000',
+  created_at: '2025-04-25T04:00:24.070256Z',
+};
+
+export const TWINE_L1_WITHDRAWAL_ITEM: TwineL1WithdrawalsItem = {
   l1_tx_hash: '0x10b1bb8e4fd372eef2737342d9ea622e2ab7a3a9293cc80e46f4fc2c325cfef7',
   l2_tx_hash: '0x0195cb6f6d5e44ad9a0a29005d9e6bc21e68ed5a167503f122e2b32173bceef3',
   l1_block_height: 123,
