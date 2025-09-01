@@ -6,9 +6,10 @@ import { TWINE_DEPOSITS_ITEM } from 'stubs/twineL2';
 import { generateListStub } from 'stubs/utils';
 import TwineDepositsListItem from 'ui/deposits/twine/TwineDepositsListItem';
 import TwineDepositsTable from 'ui/deposits/twine/TwineDepositsTable';
-import { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
+import ActionBar, { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import PageTitle from 'ui/shared/Page/PageTitle';
+import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
 const TwineL2Deposits = () => {
@@ -28,6 +29,12 @@ const TwineL2Deposits = () => {
       ),
     },
   });
+
+  const actionBar = pagination.isVisible && (
+    <ActionBar mt={ -6 }>
+      <Pagination ml="auto" { ...pagination }/>
+    </ActionBar>
+  );
 
   const content = data?.items ? (
     <>
@@ -54,6 +61,7 @@ const TwineL2Deposits = () => {
         items={ data?.items }
         emptyText="There are no deposits."
         content={ content }
+        actionBar={ actionBar }
       />
     </>
   );

@@ -77,7 +77,7 @@ export default function useNavItems(): ReturnType {
       isActive: pathname === '/deposits',
     };
     const rollupWithdrawals = {
-      text: `Withdrawals (L2${ rightLineArrow }L1)`,
+      text: `Withdrawals`,
       nextRoute: { pathname: '/withdrawals' as const },
       icon: 'arrows/north-east',
       isActive: pathname === '/withdrawals',

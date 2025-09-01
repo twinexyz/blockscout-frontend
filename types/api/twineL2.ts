@@ -73,6 +73,37 @@ export type TwineL2WithdrawalsResponse = {
   };
 };
 
+export const TWINE_L1_WITHDRAWAL_STATUS = {
+  FAILED: 0,
+  SUCCESS: 1,
+} as const;
+
+export type TwineL1WithdrawalStatus = typeof TWINE_L1_WITHDRAWAL_STATUS[keyof typeof TWINE_L1_WITHDRAWAL_STATUS];
+
+export type TwineL1WithdrawalsItem = {
+  l1_tx_hash: string;
+  l2_tx_hash: string;
+  l1_block_height: number;
+  l2_block_height: number;
+  status: TwineL1WithdrawalStatus;
+  nonce: number;
+  chain_id: number;
+  l1_token: string;
+  l2_token: string;
+  from: string;
+  to_twine_address: string;
+  amount: string;
+  created_at: string;
+};
+
+export type TwineL1WithdrawalsResponse = {
+  items: Array<TwineL1WithdrawalsItem>;
+  next_page_params: {
+    items_count: number;
+    nonce: string;
+  };
+};
+
 export interface TwineBatchesDetails {
   id: number;
   chain_id: string;

@@ -1,6 +1,7 @@
+import { Badge } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TwineL2WithdrawalsItem } from 'types/api/twineL2';
+import type { TwineL1WithdrawalsItem } from 'types/api/twineL2';
 
 import config from 'configs/app';
 import { TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
@@ -14,15 +15,17 @@ import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
 
 const rollupFeature = config.features.rollup;
 
-type Props = { item: TwineL2WithdrawalsItem; isLoading?: boolean };
+type Props = { item: TwineL1WithdrawalsItem; isLoading?: boolean };
 
-const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
+const TwineL1WithdrawalsListItem = ({ item, isLoading }: Props) => {
   if (!rollupFeature.isEnabled || rollupFeature.type !== 'twine') {
     return null;
   }
 
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainName = TWINE_CHAIN_MAPPING[chainKey]?.name || String(item.chain_id);
+  const statusText = item.status === 1 ? 'Success' : 'Failed';
+  const statusColorScheme = item.status === 1 ? 'green' : 'red';
 
   return (
     <ListItemMobileGrid.Container>
@@ -78,6 +81,11 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         />
       </ListItemMobileGrid.Value>
 
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Status</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Value>
+        <Badge colorScheme={ statusColorScheme }>{ statusText }</Badge>
+      </ListItemMobileGrid.Value>
+
       <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Token Address</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
@@ -114,4 +122,4 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
   );
 };
 
-export default TwineWithdrawalsListItem;
+export default TwineL1WithdrawalsListItem;

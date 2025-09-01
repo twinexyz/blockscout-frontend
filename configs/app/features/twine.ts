@@ -15,6 +15,10 @@ export const TWINE_CHAIN_MAPPING = {
     name: 'Solana',
     explorer_url: 'https://explorer.solana.com',
   },
+  '1337': {
+    name: 'Twine',
+    explorer_url: '',
+  },
 } as const;
 
 export type TwineChainId = keyof typeof TWINE_CHAIN_MAPPING;

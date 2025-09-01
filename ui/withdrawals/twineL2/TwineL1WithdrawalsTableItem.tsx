@@ -1,7 +1,7 @@
 import { Td, Tr, Badge } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TwineL2WithdrawalsItem } from 'types/api/twineL2';
+import type { TwineL1WithdrawalsItem } from 'types/api/twineL2';
 
 import config from 'configs/app';
 import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
@@ -14,9 +14,9 @@ import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
 
 const rollupFeature = config.features.rollup;
 
-type Props = { item: TwineL2WithdrawalsItem; isLoading?: boolean };
+type Props = { item: TwineL1WithdrawalsItem; isLoading?: boolean };
 
-const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
+const TwineL1WithdrawalsTableItem = ({ item, isLoading }: Props) => {
   if (!rollupFeature.isEnabled || rollupFeature.type !== 'twine') {
     return null;
   }
@@ -24,6 +24,8 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
   const isSolana = isTwineChainId(String(item.chain_id)) && item.chain_id === 900;
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainName = TWINE_CHAIN_MAPPING[chainKey]?.name || String(item.chain_id);
+  const statusText = item.status === 1 ? 'Success' : 'Failed';
+  const statusColorScheme = item.status === 1 ? 'green' : 'red';
 
   return (
     <Tr>
@@ -67,6 +69,9 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
         />
       </Td>
       <Td verticalAlign="middle">
+        <Badge colorScheme={ statusColorScheme }>{ statusText }</Badge>
+      </Td>
+      <Td verticalAlign="middle">
         <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
           { shortenString(item.l1_token, 8) }
         </TwineExternalLink>
@@ -96,4 +101,4 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
   );
 };
 
-export default TwineWithdrawalsTableItem;
+export default TwineL1WithdrawalsTableItem;
