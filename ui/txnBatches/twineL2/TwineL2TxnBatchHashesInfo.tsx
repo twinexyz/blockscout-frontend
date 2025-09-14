@@ -23,32 +23,6 @@ interface Props {
 const TwineL2TxnBatchHashesInfo = ({ isLoading, data }: Props) => {
   return (
     <>
-      <DetailsInfoItem.Label
-        hint="Hash of L1 tx on which the batch was committed"
-        isLoading={ isLoading }
-      >
-        Commit tx hash
-      </DetailsInfoItem.Label>
-      <DetailsInfoItem.Value
-        flexDir="column"
-        alignItems="flex-start"
-      >
-        { data.commit_transaction_hash ? (
-          <>
-            <TxEntityL1
-              isLoading={ isLoading }
-              hash={ data.commit_transaction_hash }
-              maxW="100%"
-              noCopy={ false }
-            />
-            { data.commit_transaction_timestamp && (
-              <Flex alignItems="center" flexWrap="wrap" rowGap={ 3 }>
-                <DetailsTimestamp timestamp={ data.commit_transaction_timestamp } isLoading={ isLoading }/>
-              </Flex>
-            ) }
-          </>
-        ) : <Skeleton isLoaded={ !isLoading }>Pending</Skeleton> }
-      </DetailsInfoItem.Value>
 
       <DetailsInfoItem.Label
         hint="Hash of L1 tx on which the batch was proven"
