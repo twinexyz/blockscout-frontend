@@ -33,40 +33,56 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         { chainName }
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Block Height</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.l1_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
-          { item.l1_block_height }
-        </TwineExternalLink>
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Block Height</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Block Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <BlockEntity
-          number={ item.l2_block_height }
+          number={ item.source_block_height }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
         />
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Tx Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Execute Block Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.l1_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
-          { shortenString(item.l1_tx_hash, 8) }
-        </TwineExternalLink>
+        { item.l1_execute_hash && item.l1_execute_block_height ? (
+          <BlockEntity
+            number={ item.l1_execute_block_height }
+            isLoading={ isLoading }
+            fontSize="sm"
+            lineHeight={ 5 }
+          />
+        ) : (
+          <span>-</span>
+        ) }
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Tx Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Tx Hash</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <TxEntity
-          hash={ item.l2_tx_hash }
+          hash={ item.source_tx_hash }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
           truncation="constant_long"
           noIcon
         />
+      </ListItemMobileGrid.Value>
+
+      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Execute Tx Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Value>
+        { item.l1_execute_hash ? (
+          <TxEntity
+            hash={ item.l1_execute_hash }
+            isLoading={ isLoading }
+            fontSize="sm"
+            lineHeight={ 5 }
+            truncation="constant_long"
+            noIcon
+          />
+        ) : (
+          <span>-</span>
+        ) }
       </ListItemMobileGrid.Value>
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>Age</ListItemMobileGrid.Label>

@@ -18,10 +18,14 @@ export const TWINE_L2_DEPOSIT_STATUS = {
 export type TwineL2DepositStatus = typeof TWINE_L2_DEPOSIT_STATUS[keyof typeof TWINE_L2_DEPOSIT_STATUS];
 
 export type TwineL2DepositsItem = {
-  l1_tx_hash: string;
-  l2_tx_hash: string;
-  l1_block_height: number;
-  l2_block_height: number;
+  source_tx_hash: string;
+  source_block_height: number;
+  l2_handle_tx_hash: string;
+  l2_handled_at: string;
+  l2_handle_block_height: number;
+  l1_execute_hash: string | null;
+  l1_execute_block_height: number | null;
+  l1_executed_at: string | null;
   status: TwineL2DepositStatus;
   nonce: number;
   chain_id: number;
@@ -50,10 +54,11 @@ export const TWINE_L2_WITHDRAWAL_STATUS = {
 export type TwineL2WithdrawalStatus = typeof TWINE_L2_WITHDRAWAL_STATUS[keyof typeof TWINE_L2_WITHDRAWAL_STATUS];
 
 export type TwineL2WithdrawalsItem = {
-  l1_tx_hash: string;
-  l2_tx_hash: string;
-  l1_block_height: number;
-  l2_block_height: number;
+  source_tx_hash: string;
+  source_block_height: number;
+  l1_execute_hash: string | null;
+  l1_execute_block_height: number | null;
+  l1_executed_at: string | null;
   status: TwineL2WithdrawalStatus;
   nonce: number;
   chain_id: number;
@@ -81,10 +86,14 @@ export const TWINE_L1_WITHDRAWAL_STATUS = {
 export type TwineL1WithdrawalStatus = typeof TWINE_L1_WITHDRAWAL_STATUS[keyof typeof TWINE_L1_WITHDRAWAL_STATUS];
 
 export type TwineL1WithdrawalsItem = {
-  l1_tx_hash: string;
-  l2_tx_hash: string;
-  l1_block_height: number;
-  l2_block_height: number;
+  source_tx_hash: string;
+  source_block_height: number;
+  l2_handle_tx_hash: string;
+  l2_handled_at: string;
+  l2_handle_block_height: number;
+  l1_execute_hash: string | null;
+  l1_execute_block_height: number | null;
+  l1_executed_at: string | null;
   status: TwineL1WithdrawalStatus;
   nonce: number;
   chain_id: number;

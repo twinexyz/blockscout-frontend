@@ -36,35 +36,35 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
         { chainName }
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Block Height</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Block Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.l1_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
-          { item.l1_block_height }
+        <TwineExternalLink href={ item.source_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
+          { item.source_block_height }
         </TwineExternalLink>
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Block Height</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Handle Block Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <BlockEntity
-          number={ item.l2_block_height }
+          number={ item.l2_handle_block_height }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
         />
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Tx Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Tx Hash</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        <TwineExternalLink href={ item.l1_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
-          { shortenString(item.l1_tx_hash, 8) }
+        <TwineExternalLink href={ item.source_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+          { shortenString(item.source_tx_hash, 8) }
         </TwineExternalLink>
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Tx Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Handle Tx Hash</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <TxEntity
           isLoading={ isLoading }
-          hash={ item.l2_tx_hash }
+          hash={ item.l2_handle_tx_hash }
           fontSize="sm"
           lineHeight={ 5 }
           truncation="constant_long"

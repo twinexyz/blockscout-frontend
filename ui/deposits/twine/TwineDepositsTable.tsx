@@ -19,10 +19,10 @@ const TwineDepositsTable = ({ items, top, isLoading }: Props) => {
       <Thead top={ top }>
         <Tr>
           <Th>Chain</Th>
-          <Th>L1 Block Height</Th>
-          <Th>L2 Block Height</Th>
-          <Th>L1 Txn hash</Th>
-          <Th>L2 Txn hash</Th>
+          <Th>Source Block Height</Th>
+          <Th>L2 Handle Block Height</Th>
+          <Th>Source Txn hash</Th>
+          <Th>L2 Handle Txn hash</Th>
           <Th>Age</Th>
           <Th>Status</Th>
           <Th>L1 Token Address</Th>
@@ -33,7 +33,7 @@ const TwineDepositsTable = ({ items, top, isLoading }: Props) => {
       </Thead>
       <Tbody>
         { items.map((item, index) => (
-          <TwineDepositsTableItem key={ item.l1_tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
+          <TwineDepositsTableItem key={ item.source_tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
         )) }
       </Tbody>
     </Table>
