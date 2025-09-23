@@ -90,9 +90,9 @@ jobs:
       - name: Update Tag in Helm Values for argocd
         run: |
             ls -al
-            cd argocd/apps/values/${{ env.REPO }} &&  sed -i "/tag:/s/tag:.*/tag: ${{ env.BRANCH }}-${GITHUB_SHA}/" staging-blockscout-frontend.yaml
+            cd argocd/apps/values/${{ env.REPO }}/staging &&  sed -i "/tag:/s/tag:.*/tag: ${{ env.BRANCH }}-${GITHUB_SHA}/" frontend.yaml
             git config --global user.email "devops@twinelabs.xyz"
-            git config --global user.name "twinebot"
+            git config --global user.name "pen-pal"
             git add .
             git commit --allow-empty -m "updated image tag to ${GITHUB_SHA} for ${{ env.REPO }}"
             git push origin main
