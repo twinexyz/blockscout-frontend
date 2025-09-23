@@ -95,23 +95,6 @@ export const TwineIndividualChainDetails = ({ chainDetails }: Props) => {
 
                 <DetailsInfoItemDivider/>
 
-                <DetailsInfoItem.Label>Commit transaction</DetailsInfoItem.Label>
-                <DetailsInfoItem.Value>
-                  <Flex gap={ 3 } direction="column" >
-                    <div className="flex gap-3 items-center justify-center">
-                      <TwineExternalLink href={ detail.commit_transaction_hash } chainId={ detail.chain_id }>
-                        <TruncatedValue value={ formatTxHash(detail.chain_id, detail.commit_transaction_hash) }/>
-                      </TwineExternalLink>
-                      <CopyToClipboard text={ getClipBoardText(detail.chain_id, detail.commit_transaction_hash) }/>
-                    </div>
-                    { detail.commit_transaction_timestamp && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <DetailsTimestamp timestamp={ detail.commit_transaction_timestamp }/>
-                      </div>
-                    ) }
-                  </Flex>
-                </DetailsInfoItem.Value>
-
                 { detail.prove_transaction_hash && (
                   <>
                     <DetailsInfoItem.Label>Prove transaction</DetailsInfoItem.Label>
