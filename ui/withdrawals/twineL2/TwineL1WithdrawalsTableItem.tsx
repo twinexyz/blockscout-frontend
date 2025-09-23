@@ -33,26 +33,26 @@ const TwineL1WithdrawalsTableItem = ({ item, isLoading }: Props) => {
         <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
       </Td>
       <Td verticalAlign="middle">
-        <TwineExternalLink href={ item.l1_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
-          { item.l1_block_height }
+        <TwineExternalLink href={ item.source_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
+          { item.source_block_height }
         </TwineExternalLink>
       </Td>
       <Td verticalAlign="middle">
         <BlockEntity
-          number={ item.l2_block_height }
+          number={ item.l2_handle_block_height }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
         />
       </Td>
       <Td verticalAlign="middle">
-        <TwineExternalLink href={ item.l1_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
-          { shortenString(item.l1_tx_hash, 8) }
+        <TwineExternalLink href={ item.source_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
+          { shortenString(item.source_tx_hash, 8) }
         </TwineExternalLink>
       </Td>
       <Td verticalAlign="middle">
         <TxEntity
-          hash={ item.l2_tx_hash }
+          hash={ item.l2_handle_tx_hash }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }

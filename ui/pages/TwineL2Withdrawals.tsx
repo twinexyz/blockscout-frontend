@@ -62,7 +62,7 @@ const TwineL2Withdrawals = () => {
           <Show below="lg" ssr={ false }>
             { l2WithdrawalsQuery.data?.items?.map(((item, index) => (
               <TwineWithdrawalsListItem
-                key={ item.l2_tx_hash + (l2WithdrawalsQuery.isPlaceholderData ? index : '') }
+                key={ item.source_tx_hash + (l2WithdrawalsQuery.isPlaceholderData ? index : '') }
                 isLoading={ l2WithdrawalsQuery.isPlaceholderData }
                 item={ item }
               />
@@ -86,7 +86,7 @@ const TwineL2Withdrawals = () => {
           <Show below="lg" ssr={ false }>
             { l1WithdrawalsQuery.data?.items?.map(((item, index) => (
               <TwineL1WithdrawalsListItem
-                key={ item.l2_tx_hash + (l1WithdrawalsQuery.isPlaceholderData ? index : '') }
+                key={ item.source_tx_hash + (l1WithdrawalsQuery.isPlaceholderData ? index : '') }
                 isLoading={ l1WithdrawalsQuery.isPlaceholderData }
                 item={ item }
               />

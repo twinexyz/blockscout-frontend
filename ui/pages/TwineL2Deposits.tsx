@@ -41,7 +41,7 @@ const TwineL2Deposits = () => {
       <Show below="lg" ssr={ false }>
         { data.items.map(((item, index) => (
           <TwineDepositsListItem
-            key={ item.l2_tx_hash + (isPlaceholderData ? index : '') }
+            key={ item.source_tx_hash + (isPlaceholderData ? index : '') }
             isLoading={ isPlaceholderData }
             item={ item }
           />

@@ -19,10 +19,10 @@ const TwineWithdrawalsTable = ({ items, top, isLoading }: Props) => {
       <Thead top={ top }>
         <Tr>
           <Th>Chain</Th>
-          <Th>L1 Block Height</Th>
-          <Th>L2 Block Height</Th>
-          <Th>L1 Txn hash</Th>
-          <Th>L2 Txn hash</Th>
+          <Th>Source Block Height</Th>
+          <Th>L1 Execute Block Height</Th>
+          <Th>Source Txn hash</Th>
+          <Th>L1 Execute Txn hash</Th>
           <Th>Age</Th>
           <Th>L1 Token Address</Th>
           <Th>L2 Token Address</Th>
@@ -32,7 +32,7 @@ const TwineWithdrawalsTable = ({ items, top, isLoading }: Props) => {
       </Thead>
       <Tbody>
         { items.map((item, index) => (
-          <TwineWithdrawalsTableItem key={ item.l1_tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
+          <TwineWithdrawalsTableItem key={ item.source_tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
         )) }
       </Tbody>
     </Table>

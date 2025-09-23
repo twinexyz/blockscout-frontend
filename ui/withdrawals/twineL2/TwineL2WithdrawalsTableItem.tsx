@@ -31,32 +31,48 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
         <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
       </Td>
       <Td verticalAlign="middle">
-        <TwineExternalLink href={ item.l1_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
-          { item.l1_block_height }
-        </TwineExternalLink>
-      </Td>
-      <Td verticalAlign="middle">
         <BlockEntity
-          number={ item.l2_block_height }
+          number={ item.source_block_height }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
         />
       </Td>
       <Td verticalAlign="middle">
-        <TwineExternalLink href={ item.l1_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
-          { shortenString(item.l1_tx_hash, 8) }
-        </TwineExternalLink>
+        { item.l1_execute_hash && item.l1_execute_block_height ? (
+          <BlockEntity
+            number={ item.l1_execute_block_height }
+            isLoading={ isLoading }
+            fontSize="sm"
+            lineHeight={ 5 }
+          />
+        ) : (
+          <span>-</span>
+        ) }
       </Td>
       <Td verticalAlign="middle">
         <TxEntity
-          hash={ item.l2_tx_hash }
+          hash={ item.source_tx_hash }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
           truncation="constant_long"
           noIcon
         />
+      </Td>
+      <Td verticalAlign="middle">
+        { item.l1_execute_hash ? (
+          <TxEntity
+            hash={ item.l1_execute_hash }
+            isLoading={ isLoading }
+            fontSize="sm"
+            lineHeight={ 5 }
+            truncation="constant_long"
+            noIcon
+          />
+        ) : (
+          <span>-</span>
+        ) }
       </Td>
       <Td verticalAlign="middle" pr={ 12 }>
         <TimeAgoWithTooltip
