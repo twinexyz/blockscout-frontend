@@ -52,14 +52,6 @@ jobs:
           tags: ghcr.io/${{ env.ORG }}/${{ env.REPO }}:${{ env.BRANCH }}-${{ github.sha }},ghcr.io/${{ env.ORG }}/${{ env.REPO }}:${{ env.BRANCH }}-latest
           cache-from: type=local,src=${{ runner.temp }}/.buildx-cache
           cache-to: type=local,dest=${{ runner.temp }}/.buildx-cache-new,mode=max
-
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       - name: Move cache
         run: |
           rm -rf ${{ runner.temp }}/.buildx-cache
