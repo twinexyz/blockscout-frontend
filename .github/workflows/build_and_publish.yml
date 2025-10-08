@@ -27,6 +27,22 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Aggressive Manual Cleanup
+        run: |
+          # 1. Prune Docker build cache (crucial for Docker heavy workflows)
+          # This removes unused containers, networks, images (dangling and unreferenced)
+          sudo docker system prune -a --force
+          # 2. Remove SDKs and tools unnecessary for most projects
+          # Customize this list based on what your project DOES NOT need
+          echo "Removing unneeded SDKs..."
+          sudo rm -rf /usr/share/dotnet  # .NET SDKs (often ~1.5 GB)
+          sudo rm -rf /usr/local/lib/android # Android SDK (often ~6 GB)
+          sudo rm -rf /usr/lib/jvm          # Java JDKs
+          sudo rm -rf /usr/local/.ghcup     # Haskell
+          sudo rm -rf /usr/share/swift      # Swift
+          sudo rm -rf /opt/hostedtoolcache  # Tool cache (if you don't use CodeQL, etc.)
+          # 3. Show remaining space for debugging
+          df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Log in to GitHub Container Registry
