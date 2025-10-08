@@ -21,12 +21,11 @@ env:
 
 jobs:
   build_and_push:
-    name: Build Image (${{ matrix.target }} - ${{ matrix.arch }})
+    name: Build Image (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
         arch: [amd64, arm64]
-        target: ${{ fromJSON(inputs.docker_targets) }}
         include:
           - arch: amd64
             runner: ubuntu-24.04
@@ -107,7 +106,6 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.metadata.outputs.tags }},${{ env.REGISTRY_IMAGE }}
-          target: ${{ matrix.target }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,push-by-digest=true,name=${{ env.REGISTRY_IMAGE }},push=true
 
