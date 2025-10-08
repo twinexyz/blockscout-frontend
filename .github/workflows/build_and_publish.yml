@@ -142,7 +142,7 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     needs:
-      - build_arch
+      - build_and_push
     steps:
       - name: Download digests
         uses: actions/download-artifact@v5.0.0
