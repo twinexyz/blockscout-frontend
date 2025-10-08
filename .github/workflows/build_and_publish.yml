@@ -3,12 +3,8 @@ name: Build and Deploy
 on:
  push:
    branches:
-     - '**'  # This will trigger on all branches
-   tags:
-     - '**'  # This will trigger on all tags
- pull_request:
-
-
+     - 'develop'
+     - 'twine'
 
 concurrency:
  group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,6 +14,7 @@ env:
   BRANCH: ${{ github.ref_name }}
   REPO: ${{ github.event.repository.name }}
   ORG: ${{ github.repository_owner }}
+  REGISTRY_IMAGE: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
 
 jobs:
   build_and_push:
@@ -38,6 +35,10 @@ jobs:
       packages: write
       id-token: write
     steps:
+      - uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.3
+        with:
+          egress-policy: audit
+          
       - name: Aggressive Manual Cleanup
         run: |
           # 1. Prune Docker build cache (crucial for Docker heavy workflows)
@@ -61,7 +62,7 @@ jobs:
       - name: Sanitize branch slug
         id: sanitize
         run: |
-          CLEAN_BRANCH="${{ inputs.branch_slug }}"
+          CLEAN_BRANCH="${{ github.ref_name }}"
           BRANCH="${CLEAN_BRANCH//\//-}"
           echo "CLEAN_BRANCH=$BRANCH" >> $GITHUB_ENV
 
@@ -135,13 +136,16 @@ jobs:
           end_time=$(date +%s)
           duration=$((end_time - ${{ env.start_time }}))
           echo "duration=${duration}" >> $GITHUB_OUTPUT
-
-
+          
   merge:
     runs-on: ubuntu-latest
     needs:
       - build_and_push
     steps:
+      - uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.3
+        with:
+          egress-policy: audit
+          
       - name: Download digests
         uses: actions/download-artifact@v5.0.0
         with:
@@ -162,7 +166,7 @@ jobs:
       - name: Sanitize branch slug
         id: sanitize
         run: |
-          CLEAN_BRANCH="${{ inputs.branch_slug }}"
+          CLEAN_BRANCH="${{ github.ref_name }}"
           BRANCH="${CLEAN_BRANCH//\//-}"
           echo "CLEAN_BRANCH=$BRANCH" >> $GITHUB_ENV
 
@@ -190,7 +194,6 @@ jobs:
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
 
-
   deploy:
     name: Deploy Latest Tag
     runs-on: ubuntu-24.04
@@ -198,7 +201,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
     steps:
       - uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.3
         with:
