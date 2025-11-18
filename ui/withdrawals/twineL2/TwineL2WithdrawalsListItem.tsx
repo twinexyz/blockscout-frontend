@@ -5,6 +5,7 @@ import type { TwineL2WithdrawalsItem } from 'types/api/twineL2';
 import config from 'configs/app';
 import { TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import shortenString from 'lib/shortenString';
+import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
@@ -30,7 +31,9 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         Chain
       </ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        { chainName }
+        <Skeleton isLoaded={ !isLoading } display="inline-block">
+          { chainName }
+        </Skeleton>
       </ListItemMobileGrid.Value>
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>Source Block Height</ListItemMobileGrid.Label>
@@ -124,7 +127,9 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
 
       <ListItemMobileGrid.Label isLoading={ isLoading }>Amount</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        { item.amount }
+        <Skeleton isLoaded={ !isLoading } display="inline-block">
+          { item.amount }
+        </Skeleton>
       </ListItemMobileGrid.Value>
     </ListItemMobileGrid.Container>
   );

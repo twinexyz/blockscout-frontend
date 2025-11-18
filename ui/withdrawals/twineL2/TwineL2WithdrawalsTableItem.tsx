@@ -6,6 +6,7 @@ import type { TwineL2WithdrawalsItem } from 'types/api/twineL2';
 import config from 'configs/app';
 import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import shortenString from 'lib/shortenString';
+import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
@@ -28,7 +29,9 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
   return (
     <Tr>
       <Td verticalAlign="middle">
-        <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
+        <Skeleton isLoaded={ !isLoading } display="inline-block">
+          <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
+        </Skeleton>
       </Td>
       <Td verticalAlign="middle">
         <BlockEntity

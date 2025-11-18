@@ -6,6 +6,7 @@ import type { TwineL1WithdrawalsItem } from 'types/api/twineL2';
 import config from 'configs/app';
 import { isTwineChainId, TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
 import shortenString from 'lib/shortenString';
+import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
@@ -30,7 +31,9 @@ const TwineL1WithdrawalsTableItem = ({ item, isLoading }: Props) => {
   return (
     <Tr>
       <Td verticalAlign="middle">
-        <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
+        <Skeleton isLoaded={ !isLoading } display="inline-block">
+          <Badge colorScheme={ isSolana ? 'purple' : 'blue' }>{ chainName }</Badge>
+        </Skeleton>
       </Td>
       <Td verticalAlign="middle">
         <TwineExternalLink href={ item.source_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
@@ -69,7 +72,9 @@ const TwineL1WithdrawalsTableItem = ({ item, isLoading }: Props) => {
         />
       </Td>
       <Td verticalAlign="middle">
-        <Badge colorScheme={ statusColorScheme }>{ statusText }</Badge>
+        <Skeleton isLoaded={ !isLoading } display="inline-block">
+          <Badge colorScheme={ statusColorScheme }>{ statusText }</Badge>
+        </Skeleton>
       </Td>
       <Td verticalAlign="middle">
         <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
