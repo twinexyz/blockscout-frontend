@@ -33,7 +33,7 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
     const chainConfig = TWINE_CHAIN_MAPPING[chainKey];
 
     // If chain_id is already an L1 chain ID (not Twine), use it
-    if (chainConfig && chainConfig.explorer_url && chainConfig.explorer_url !== '') {
+    if (chainConfig && chainConfig.explorer_url) {
       return String(item.chain_id);
     }
 
