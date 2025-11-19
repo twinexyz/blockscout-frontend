@@ -202,9 +202,14 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
             Batch
           </DetailsInfoItem.Label>
           <DetailsInfoItem.Value>
-            { data.twine.number ?
-              <BatchEntityL2 isLoading={ isLoading } number={ data.twine.number }/> :
-              <Skeleton isLoaded={ !isLoading }>Pending</Skeleton> }
+            { data.twine.number ? (
+              <BatchEntityL2 isLoading={ isLoading } number={ data.twine.number }/>
+            ) : (
+              <Flex alignItems="center" gap={ 2 }>
+                <Spinner size="sm"/>
+                <Text variant="secondary" fontSize="sm">Pending</Text>
+              </Flex>
+            ) }
           </DetailsInfoItem.Value>
         </>
       ) }
@@ -219,7 +224,12 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
           <DetailsInfoItem.Value>
             <Skeleton isLoaded={ !isLoading }>
               <Flex gap={ 2 } flexWrap="wrap" alignItems="center" justifyContent="center">
-                { data.twine.details.length === 0 && <Text>Batch status not available for this transaction</Text> }
+                { data.twine.details.length === 0 && (
+                  <Flex alignItems="center" gap={ 2 }>
+                    <Spinner size="sm"/>
+                    <Text variant="secondary" fontSize="sm">Loading status...</Text>
+                  </Flex>
+                ) }
                 { data.twine.details.map((detail) => (
                   <Tag
                     key={ detail.chain_id }
