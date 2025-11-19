@@ -1,27 +1,39 @@
 export const TWINE_CHAIN_MAPPING = {
   '17000': {
     name: 'Holesky',
+    icon: 'chains/ethereum' as const,
     explorer_url: 'https://holesky.etherscan.io',
+    rpc_url: 'https://holesky.drpc.org',
   },
   '103': {
     name: 'Solana',
+    icon: 'chains/solana' as const,
     explorer_url: 'https://explorer.solana.com',
+    rpc_url: 'https://api.devnet.solana.com',
   },
   '11155111': {
     name: 'Sepolia',
+    icon: 'chains/ethereum' as const,
     explorer_url: 'https://sepolia.etherscan.io',
+    rpc_url: 'https://sepolia.drpc.org',
   },
   '900': {
     name: 'Solana',
+    icon: 'chains/solana' as const,
     explorer_url: 'https://explorer.solana.com',
+    rpc_url: 'https://api.devnet.solana.com',
   },
   '1337': {
     name: 'Twine',
+    icon: 'chains/twine' as const,
     explorer_url: '',
+    rpc_url: '',
   },
   '14523': {
     name: 'Twine',
+    icon: 'chains/twine' as const,
     explorer_url: '',
+    rpc_url: '',
   },
 } as const;
 
@@ -30,6 +42,11 @@ export type TwineChainId = keyof typeof TWINE_CHAIN_MAPPING;
 export const isTwineChainId = (chainId: string): chainId is TwineChainId => {
   return chainId in TWINE_CHAIN_MAPPING;
 };
+
+// Default L1 chain ID for L2 withdrawals when chain_id is Twine/L2 chain ID
+// This is used as a fallback when we can't determine the L1 chain from transaction/token format
+// Change this value to switch the default EVM chain (e.g., '17000' for Holesky, '11155111' for Sepolia)
+export const DEFAULT_L1_CHAIN_ID_FOR_L2_WITHDRAWALS = '11155111'; // Sepolia
 
 export const getExplorerTxUrl = (chainId: string, txHash: string) => {
   if (!txHash) return '';

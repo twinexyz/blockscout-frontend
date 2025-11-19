@@ -9,7 +9,7 @@ export const TWINE_DEPOSITS_ITEM: TwineL2DepositsItem = {
   l1_execute_hash: null,
   l1_execute_block_height: null,
   l1_executed_at: null,
-  status: 0,
+  status: 1,
   nonce: 33,
   chain_id: 900,
   l1_token: '11111111111111111111111111111111',

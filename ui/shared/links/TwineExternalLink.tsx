@@ -32,7 +32,7 @@ const TwineExternalLink = ({ href, children, className, isLoading, variant, icon
   if (isLoading) {
     if (variant === 'subtle') {
       return (
-        <Skeleton className={ className } { ...styleProps } bgColor="inherit">
+        <Skeleton className={ className } { ...styleProps } bgColor="inherit" isLoaded={ false }>
           { children }
           <Box boxSize={ 3 } display="inline-block"/>
         </Skeleton>
@@ -40,10 +40,10 @@ const TwineExternalLink = ({ href, children, className, isLoading, variant, icon
     }
 
     return (
-      <Box className={ className } { ...styleProps }>
+      <Skeleton className={ className } { ...styleProps } isLoaded={ false } display="inline-block">
         { children }
-        <Skeleton boxSize={ 3 } verticalAlign="middle" display="inline-block"/>
-      </Box>
+        <Box boxSize={ 3 } display="inline-block" ml={ 1 }/>
+      </Skeleton>
     );
   }
 

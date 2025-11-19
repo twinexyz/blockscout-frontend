@@ -19,16 +19,16 @@ const TwineL1WithdrawalsTable = ({ items, top, isLoading }: Props) => {
       <Thead top={ top }>
         <Tr>
           <Th>Chain</Th>
-          <Th>Source Block Height</Th>
-          <Th>L2 Handle Block Height</Th>
-          <Th>Source Txn hash</Th>
-          <Th>L2 Handle Txn hash</Th>
-          <Th>Age</Th>
-          <Th>Status</Th>
+          <Th>L1 Block Height</Th>
+          <Th>L2 Block Height</Th>
+          <Th>L1 Txn Hash</Th>
+          <Th>L2 Txn Hash</Th>
           <Th>L1 Token Address</Th>
           <Th>L2 Token Address</Th>
           <Th>From</Th>
           <Th>To</Th>
+          <Th>Age</Th>
+          <Th>Status</Th>
         </Tr>
       </Thead>
       <Tbody>
