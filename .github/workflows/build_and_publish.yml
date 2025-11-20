@@ -4,6 +4,7 @@ on:
  push:
    branches:
      - 'develop'
+     - 'staging'
      - 'twine'
 
 concurrency:
@@ -198,6 +199,8 @@ jobs:
 
   determine_deployment_target:
     name: Determine Target
+    needs:
+      - merge
     runs-on: ubuntu-latest # Can be a fast, standard runner
     if: github.event_name != 'pull_request'
     outputs:
