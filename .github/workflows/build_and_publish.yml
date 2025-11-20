@@ -1,11 +1,20 @@
-name: Build and Deploy
+name: Build and Push Docker Image
 
 on:
- push:
-   branches:
-     - 'develop'
-     - 'staging'
-     - 'twine'
+  push:
+    branches:
+      - 'main'
+      - 'staging'
+      - 'develop'
+    tags:
+      - '**'  # This will trigger on all tags
+    paths-ignore:
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - 'main'
+      - 'staging'
+      - 'develop'
 
 concurrency:
  group: ${{ github.workflow }}-${{ github.ref }}
@@ -223,7 +232,7 @@ jobs:
       - name: Sanitize branch slug
         id: sanitize
         run: |
-          CLEAN_BRANCH="${{ env.branch_slug }}"
+          CLEAN_BRANCH="${{ env.BRANCH }}"
           BRANCH="${CLEAN_BRANCH//\//-}"
           echo "CLEAN_BRANCH=$BRANCH" >> $GITHUB_ENV # Set for use in fallback
 
