@@ -27,11 +27,73 @@ env:
   REGISTRY_IMAGE: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
   SHA: ${{ github.sha  }}
   APP_NAME: "frontend"
+  DOCKER_TARGETS: '["runner"]'
 
 jobs:
-  build_and_push:
-    name: Build Image (${{ matrix.arch }})
+  determine_build_target:
+    name: Determine Target
+    runs-on: ubuntu-latest # Can be a fast, standard runner
+    outputs:
+      # Output is now based on which step successfully ran
+      target_environment: ${{ steps.check_prod.outputs.environment || steps.check_public.outputs.environment || steps.check_fallback.outputs.environment }}
+      
+    steps:
+      - name: Start timer
+        id: start-time
+        run: echo "start_time=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Checkout tools repo
+        uses: actions/checkout@v5.0.0
+        with:
+          repository: twinexyz/argocd
+          path: argocd
+          token: ${{ secrets.GH_ACTION_PAT  }}
+          persist-credentials: false
+
+      - name: CHECK Production Tag (v*.*.*)
+        id: check_prod
+        if: |
+          startsWith(github.ref, 'refs/tags/') &&
+          startsWith(github.ref_name, 'v') &&
+          !contains(github.ref_name, '-pub') &&
+          !contains(github.ref_name, '-beta') &&
+          !contains(github.ref_name, '-test') &&
+          !contains(github.ref_name, '-dev') &&
+          !contains(github.ref_name, '-rc')
+        run: echo "environment=production" >> $GITHUB_OUTPUT
+
+      - name: CHECK Public Tag (v*.*.*-pub or -beta)
+        id: check_public
+        if: |
+          steps.check_prod.outcome != 'success' &&
+          startsWith(github.ref, 'refs/tags/') &&
+          (contains(github.ref_name, '-pub') || contains(github.ref_name, '-beta'))
+        run: echo "environment=public" >> $GITHUB_OUTPUT
+
+      - name: CHECK Fallback (branch or rejected tags)
+        id: check_fallback
+        if: |
+          steps.check_prod.outcome != 'success' &&
+          steps.check_public.outcome != 'success'
+        run: echo "environment=staging" >> $GITHUB_OUTPUT
+
+      - name: Handle build failure
+        if: ${{ failure() }}
+        run: echo "Build failed. Check logs for details."
+
+      - name: End timer and calculate duration
+        id: set-duration
+        run: |
+          end_time=$(date +%s)
+          duration=$((end_time - ${{ env.start_time }}))
+          echo "duration=${duration}" >> $GITHUB_OUTPUT
+
+  build_arch:
+    name: Build Image (${{ matrix.target }} - ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
+    environment:
+      name: ${{ needs.determine_build_target.outputs.target_environment }}
+    needs: [determine_build_target]
     strategy:
       matrix:
         arch: [amd64, arm64]
@@ -42,41 +104,23 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
             platform: linux/arm64
+    env:
+      ACTIONS_RESULTS_URL: ${{ matrix.arch == 'arm64' && secrets.CACHE_SERVER_URL_ARM64 || secrets.CACHE_SERVER_URL }}
+      
     permissions:
       contents: read
       packages: write
       id-token: write
+
     steps:
-      - uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.3
-        with:
-          egress-policy: audit
-          
-      - name: Aggressive Manual Cleanup
-        run: |
-          # 1. Prune Docker build cache (crucial for Docker heavy workflows)
-          # This removes unused containers, networks, images (dangling and unreferenced)
-          sudo docker system prune -a --force
-          # 2. Remove SDKs and tools unnecessary for most projects
-          # Customize this list based on what your project DOES NOT need
-          echo "Removing unneeded SDKs..."
-          sudo rm -rf /usr/share/dotnet  # .NET SDKs (often ~1.5 GB)
-          sudo rm -rf /usr/local/lib/android # Android SDK (often ~6 GB)
-          sudo rm -rf /usr/lib/jvm          # Java JDKs
-          sudo rm -rf /usr/local/.ghcup     # Haskell
-          sudo rm -rf /usr/share/swift      # Swift
-          sudo rm -rf /opt/hostedtoolcache  # Tool cache (if you don't use CodeQL, etc.)
-          # 3. Show remaining space for debugging
-          df -h
+      - name: Start timer
+        id: start-time
+        run: echo "start_time=$(date +%s)" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v5.0.0
-
-      - name: Sanitize branch slug
-        id: sanitize
-        run: |
-          CLEAN_BRANCH="${{ github.ref_name }}"
-          BRANCH="${CLEAN_BRANCH//\//-}"
-          echo "CLEAN_BRANCH=$BRANCH" >> $GITHUB_ENV
+        with:
+          persist-credentials: false
 
       - name: Prepare
         run: |
@@ -93,7 +137,7 @@ jobs:
         uses: docker/login-action@v3.5.0
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ secrets.GH_ACTION_ACTOR }}
           password: ${{ secrets.GH_ACTION_PAT }}
 
       - name: Set up QEMU
@@ -110,6 +154,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-${{ matrix.arch }}-
 
+      - name: Echo variable
+        run: |
+          echo "------------------"
+          echo ${{ vars.FEATURES }}
+          echo $FEATURES
+          echo "------------------"
+
       - name: Build and push ${{ matrix.arch }} image
         id: build
         uses: docker/build-push-action@v6.18.0
@@ -121,6 +172,17 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }},${{ env.REGISTRY_IMAGE }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,push-by-digest=true,name=${{ env.REGISTRY_IMAGE }},push=true
+          secrets: |
+            github_token=${{ secrets.GH_ACTION_PAT }}
+            github_username=${{ secrets.GH_ACTION_USER }}
+          build-args: |
+            RSP_TAG=${{ secrets.RSP_TAG }}
+            RSP_FILENAME=rsp-${{ matrix.arch }}
+            SOLANA_STUB_PROVER_FILENAME=solana-stub-prover-${{ matrix.arch }}
+            TXNPROVER_TAG=${{ secrets.TXNPROVER_TAG }}
+            GITHUB_ORGANIZATION=${{ env.ORG }}
+            FEATURES=${{ vars.FEATURES }}
+            ARCH=${{ matrix.arch }}
 
       - name: Export digest
         run: |
@@ -138,6 +200,11 @@ jobs:
           compression-level: 0
           overwrite: true
 
+#        - name: Move cache
+#        run: |
+#          rm -rf ${{ runner.temp }}/.buildx-cache-${{ matrix.arch }}
+#          mv ${{ runner.temp }}/.buildx-cache-new-${{ matrix.arch }} ${{ runner.temp }}/.buildx-cache-${{ matrix.arch }}
+
       - name: Handle build failure
         if: ${{ failure() }}
         run: echo "Build failed. Check logs for details."
@@ -148,16 +215,13 @@ jobs:
           end_time=$(date +%s)
           duration=$((end_time - ${{ env.start_time }}))
           echo "duration=${duration}" >> $GITHUB_OUTPUT
-          
+
+
   merge:
     runs-on: ubuntu-latest
     needs:
-      - build_and_push
+      - build_arch
     steps:
-      - uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.3
-        with:
-          egress-policy: audit
-          
       - name: Download digests
         uses: actions/download-artifact@v5.0.0
         with:
@@ -175,22 +239,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.11.1
 
-      - name: Sanitize branch slug
-        id: sanitize
-        run: |
-          CLEAN_BRANCH="${{ github.ref_name }}"
-          BRANCH="${CLEAN_BRANCH//\//-}"
-          echo "CLEAN_BRANCH=$BRANCH" >> $GITHUB_ENV
-
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5.8.0
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
-            #type=ref,event=branch
-            #type=ref,event=pr
-            type=raw,value=${{ env.BRANCH }}-${{ env.SHA }}
+            type=raw,value=${{ env.SHA }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
         env:
@@ -205,6 +260,7 @@ jobs:
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+
 
   determine_deployment_target:
     name: Determine Target
@@ -235,7 +291,6 @@ jobs:
           CLEAN_BRANCH="${{ env.BRANCH }}"
           BRANCH="${CLEAN_BRANCH//\//-}"
           echo "CLEAN_BRANCH=$BRANCH" >> $GITHUB_ENV # Set for use in fallback
-
       - name: CHECK Production Tag (v*.*.*)
         id: check_prod
         if: |
@@ -273,7 +328,6 @@ jobs:
           end_time=$(date +%s)
           duration=$((end_time - ${{ env.start_time }}))
           echo "duration=${duration}" >> $GITHUB_OUTPUT
-
   deploy:
     name: Deploy to ${{ needs.determine_deployment_target.outputs.target_folder }}
     #runs-on: [self-hosted, linux, x64]
@@ -304,28 +358,22 @@ jobs:
           TARGET_DIR: ${{ needs.determine_deployment_target.outputs.target_folder }}
         run: |
             echo "Changing directory to: argocd/apps/values/${{ env.REPO }}/${{ env.TARGET_DIR }}"
-
             cd argocd/apps/values/${{  env.REPO }}/${{ env.TARGET_DIR }}
-
             APPS=$(echo "${{ env.APP_NAME }}" | tr -d ' ' | tr ',' '\n')
-
             for app in $APPS; do
               echo "Updating tag for $app"
               sed -i "/tag:/s/tag:.*/tag: ${{ env.SHA }}/" $app.yaml
             done
-
             git config --global url.https://${{ secrets.GH_ACTION_PAT }}@github.com/.insteadOf https://github.com/
             git config --global user.email "devops@twinelabs.xyz"
             git config --global user.name "${{ secrets.GH_ACTION_ACTOR }}"
             git add .
             git commit --allow-empty -m "updated image tag to $${{ env.SHA }} for ${{ env.REPO }} for ${{ env.TARGET_DIR }} deployment"
             git push origin main
-
       - name: Clean up Git global config
         run: |
           rm -f ~/.gitconfig
           echo "Removed global Git config"
-
       - name: Handle build failure
         if: ${{ failure() }}
         run: echo "Build failed. Check logs for details."
