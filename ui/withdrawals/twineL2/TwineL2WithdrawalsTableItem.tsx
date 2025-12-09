@@ -11,7 +11,6 @@ import useTwineTokenInfo from 'lib/token/useTwineTokenInfo';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import BlockEntity from 'ui/shared/entities/block/BlockEntity';
-import TokenEntity from 'ui/shared/entities/token/TokenEntity';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
 import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 import TwineExternalLink from 'ui/shared/links/TwineExternalLink';
@@ -90,7 +89,8 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
 
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainConfig = TWINE_CHAIN_MAPPING[chainKey];
-  const chainIcon = chainConfig?.icon || 'networks/icon-placeholder';
+  // Ensure we have a valid icon - if chainConfig doesn't exist or icon is missing, use placeholder
+  const chainIcon: IconName = (chainConfig?.icon ?? 'networks/icon-placeholder') as IconName;
 
   return (
     <Tr>
@@ -107,7 +107,7 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
             p={ 1.5 }
             boxSize={ 8 }
           >
-            <IconSvg name={ chainIcon as IconName } boxSize={ 5 } isLoading={ isLoading }/>
+            <IconSvg name={ chainIcon } boxSize={ 5 } isLoading={ isLoading }/>
           </Box>
         </Skeleton>
       </Td>
@@ -120,15 +120,6 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
         />
       </Td>
       <Td verticalAlign="middle">
-        { item.l1_execute_hash && item.l1_execute_block_height ? (
-          <TwineExternalLink href={ String(item.l1_execute_block_height) } chainId={ l1ChainId } type="block" isLoading={ isLoading }>
-            { item.l1_execute_block_height }
-          </TwineExternalLink>
-        ) : (
-          <span>-</span>
-        ) }
-      </Td>
-      <Td verticalAlign="middle">
         <TxEntity
           hash={ item.source_tx_hash }
           isLoading={ isLoading }
@@ -137,6 +128,31 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
           truncation="constant"
           noIcon
         />
+      </Td>
+      <Td verticalAlign="middle">
+        <AddressEntity
+          address={{
+            hash: item.l2_token,
+            name: l2TokenQuery.data?.symbol ? `$${ l2TokenQuery.data.symbol }` : '',
+            is_contract: false,
+            is_verified: false,
+            ens_domain_name: null,
+            implementations: null,
+          }}
+          isLoading={ isLoading || l2TokenQuery.isLoading }
+          truncation="constant"
+          noCopy
+          fontSize="sm"
+        />
+      </Td>
+      <Td verticalAlign="middle">
+        { item.l1_execute_hash && item.l1_execute_block_height ? (
+          <TwineExternalLink href={ String(item.l1_execute_block_height) } chainId={ l1ChainId } type="block" isLoading={ isLoading }>
+            { item.l1_execute_block_height }
+          </TwineExternalLink>
+        ) : (
+          <span>-</span>
+        ) }
       </Td>
       <Td verticalAlign="middle">
         { item.l1_execute_hash ? (
@@ -148,48 +164,9 @@ const TwineWithdrawalsTableItem = ({ item, isLoading }: Props) => {
         ) }
       </Td>
       <Td verticalAlign="middle">
-        { l1TokenInfo.data ? (
-          <TokenEntity
-            token={{
-              address: l1TokenInfo.data.address,
-              name: l1TokenInfo.data.name,
-              symbol: l1TokenInfo.data.symbol ? `$${ l1TokenInfo.data.symbol }` : null,
-              type: 'ERC-20',
-              icon_url: null,
-            }}
-            isLoading={ isLoading || l1TokenInfo.isLoading }
-            noIcon
-            noCopy
-            onlySymbol
-            fontSize="sm"
-          />
-        ) : (
-          <TwineExternalLink href={ item.l1_token } chainId={ l1ChainId } type="address" isLoading={ isLoading }>
-            { shortenString(item.l1_token, 8) }
-          </TwineExternalLink>
-        ) }
-      </Td>
-      <Td verticalAlign="middle">
-        { l2TokenQuery.data ? (
-          <TokenEntity
-            token={{
-              ...l2TokenQuery.data,
-              symbol: l2TokenQuery.data.symbol ? `$${ l2TokenQuery.data.symbol }` : null,
-            }}
-            isLoading={ isLoading || l2TokenQuery.isPlaceholderData }
-            noIcon
-            noCopy
-            onlySymbol
-            fontSize="sm"
-          />
-        ) : (
-          <AddressEntity
-            address={{ hash: item.l2_token, name: '', is_contract: false, is_verified: false, ens_domain_name: null, implementations: null }}
-            isLoading={ isLoading || l2TokenQuery.isLoading }
-            truncation="constant"
-            noCopy
-          />
-        ) }
+        <TwineExternalLink href={ item.l1_token } chainId={ l1ChainId } type="address" isLoading={ isLoading || l1TokenInfo.isLoading }>
+          { l1TokenInfo.data?.symbol ? `$${ l1TokenInfo.data.symbol }` : shortenString(item.l1_token, 8) }
+        </TwineExternalLink>
       </Td>
       <Td verticalAlign="middle">
         <AddressEntity
