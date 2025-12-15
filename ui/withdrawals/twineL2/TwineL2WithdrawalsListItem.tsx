@@ -11,7 +11,6 @@ import useTwineTokenInfo from 'lib/token/useTwineTokenInfo';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import BlockEntity from 'ui/shared/entities/block/BlockEntity';
-import TokenEntity from 'ui/shared/entities/token/TokenEntity';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
 import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 import TwineExternalLink from 'ui/shared/links/TwineExternalLink';
@@ -91,7 +90,8 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
 
   const chainKey = String(item.chain_id) as keyof typeof TWINE_CHAIN_MAPPING;
   const chainConfig = TWINE_CHAIN_MAPPING[chainKey];
-  const chainIcon = chainConfig?.icon || 'networks/icon-placeholder';
+  // Ensure we have a valid icon - if chainConfig doesn't exist or icon is missing, use placeholder
+  const chainIcon: IconName = (chainConfig?.icon ?? 'networks/icon-placeholder') as IconName;
 
   return (
     <ListItemMobileGrid.Container>
@@ -111,12 +111,12 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
             p={ 1.5 }
             boxSize={ 8 }
           >
-            <IconSvg name={ chainIcon as IconName } boxSize={ 5 } isLoading={ isLoading }/>
+            <IconSvg name={ chainIcon } boxSize={ 5 } isLoading={ isLoading }/>
           </Box>
         </Skeleton>
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Block Height</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Height</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <BlockEntity
           number={ item.source_block_height }
@@ -126,18 +126,7 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         />
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Block Height</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
-        { item.l1_execute_hash && item.l1_execute_block_height ? (
-          <TwineExternalLink href={ String(item.l1_execute_block_height) } chainId={ l1ChainId } type="block" isLoading={ isLoading }>
-            { item.l1_execute_block_height }
-          </TwineExternalLink>
-        ) : (
-          <span>-</span>
-        ) }
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Txn Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Txn Hash</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <TxEntity
           hash={ item.source_tx_hash }
@@ -149,7 +138,36 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         />
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Txn Hash</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Token</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Value>
+        <AddressEntity
+          address={{
+            hash: item.l2_token,
+            name: l2TokenQuery.data?.symbol ? `$${ l2TokenQuery.data.symbol }` : '',
+            is_contract: false,
+            is_verified: false,
+            ens_domain_name: null,
+            implementations: null,
+          }}
+          isLoading={ isLoading || l2TokenQuery.isLoading }
+          truncation="constant"
+          noCopy
+          fontSize="sm"
+        />
+      </ListItemMobileGrid.Value>
+
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Destination Height</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Value>
+        { item.l1_execute_hash && item.l1_execute_block_height ? (
+          <TwineExternalLink href={ String(item.l1_execute_block_height) } chainId={ l1ChainId } type="block" isLoading={ isLoading }>
+            { item.l1_execute_block_height }
+          </TwineExternalLink>
+        ) : (
+          <span>-</span>
+        ) }
+      </ListItemMobileGrid.Value>
+
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Destination Txn Hash</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         { item.l1_execute_hash ? (
           <TwineExternalLink href={ item.l1_execute_hash } chainId={ l1ChainId } type="tx" isLoading={ isLoading }>
@@ -160,51 +178,11 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
         ) }
       </ListItemMobileGrid.Value>
 
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L1 Token Address</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>Destination Token</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
-        { l1TokenInfo.data ? (
-          <TokenEntity
-            token={{
-              address: l1TokenInfo.data.address,
-              name: l1TokenInfo.data.name,
-              symbol: l1TokenInfo.data.symbol ? `$${ l1TokenInfo.data.symbol }` : null,
-              type: 'ERC-20',
-              icon_url: null,
-            }}
-            isLoading={ isLoading || l1TokenInfo.isLoading }
-            noIcon
-            noCopy
-            onlySymbol
-            fontSize="sm"
-          />
-        ) : (
-          <TwineExternalLink href={ item.l1_token } chainId={ l1ChainId } type="address" isLoading={ isLoading }>
-            { shortenString(item.l1_token, 8) }
-          </TwineExternalLink>
-        ) }
-      </ListItemMobileGrid.Value>
-      <ListItemMobileGrid.Label isLoading={ isLoading }>L2 Token Address</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
-        { l2TokenQuery.data ? (
-          <TokenEntity
-            token={{
-              ...l2TokenQuery.data,
-              symbol: l2TokenQuery.data.symbol ? `$${ l2TokenQuery.data.symbol }` : null,
-            }}
-            isLoading={ isLoading || l2TokenQuery.isPlaceholderData }
-            noIcon
-            noCopy
-            onlySymbol
-            fontSize="sm"
-          />
-        ) : (
-          <AddressEntity
-            address={{ hash: item.l2_token, name: '', is_contract: false, is_verified: false, ens_domain_name: null, implementations: null }}
-            isLoading={ isLoading || l2TokenQuery.isLoading }
-            truncation="constant"
-            noCopy
-          />
-        ) }
+        <TwineExternalLink href={ item.l1_token } chainId={ l1ChainId } type="address" isLoading={ isLoading || l1TokenInfo.isLoading }>
+          { l1TokenInfo.data?.symbol ? `$${ l1TokenInfo.data.symbol }` : shortenString(item.l1_token, 8) }
+        </TwineExternalLink>
       </ListItemMobileGrid.Value>
       <ListItemMobileGrid.Label isLoading={ isLoading }>From</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
@@ -215,7 +193,7 @@ const TwineWithdrawalsListItem = ({ item, isLoading }: Props) => {
           noCopy
         />
       </ListItemMobileGrid.Value>
-      <ListItemMobileGrid.Label isLoading={ isLoading }>To (Twine Address)</ListItemMobileGrid.Label>
+      <ListItemMobileGrid.Label isLoading={ isLoading }>To</ListItemMobileGrid.Label>
       <ListItemMobileGrid.Value>
         <AddressEntity
           address={{ hash: item.to_twine_address, name: '', is_contract: false, is_verified: false, ens_domain_name: null, implementations: null }}
