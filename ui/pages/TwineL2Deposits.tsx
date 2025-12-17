@@ -6,9 +6,10 @@ import { TWINE_DEPOSITS_ITEM } from 'stubs/twineL2';
 import { generateListStub } from 'stubs/utils';
 import TwineDepositsListItem from 'ui/deposits/twine/TwineDepositsListItem';
 import TwineDepositsTable from 'ui/deposits/twine/TwineDepositsTable';
-import { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
+import ActionBar, { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import PageTitle from 'ui/shared/Page/PageTitle';
+import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
 const TwineL2Deposits = () => {
@@ -21,20 +22,26 @@ const TwineL2Deposits = () => {
         {
           next_page_params: {
             items_count: 50,
-            l1_block_number: 9045200,
-            transaction_hash: '',
+            chain_id: 9045200,
+            nonce: '',
           },
         },
       ),
     },
   });
 
+  const actionBar = pagination.isVisible && (
+    <ActionBar mt={ -6 }>
+      <Pagination ml="auto" { ...pagination }/>
+    </ActionBar>
+  );
+
   const content = data?.items ? (
     <>
       <Show below="lg" ssr={ false }>
         { data.items.map(((item, index) => (
           <TwineDepositsListItem
-            key={ item.tx_hash + (isPlaceholderData ? index : '') }
+            key={ item.source_tx_hash + (isPlaceholderData ? index : '') }
             isLoading={ isPlaceholderData }
             item={ item }
           />
@@ -54,6 +61,7 @@ const TwineL2Deposits = () => {
         items={ data?.items }
         emptyText="There are no deposits."
         content={ content }
+        actionBar={ actionBar }
       />
     </>
   );

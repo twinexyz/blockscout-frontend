@@ -7,29 +7,33 @@ import { default as Thead } from 'ui/shared/TheadSticky';
 
 import TwineDepositsTableItem from './TwineDepositsTableItem';
 
- type Props = {
-   items: Array<TwineL2DepositsItem>;
-   top: number;
-   isLoading?: boolean;
- };
+type Props = {
+  items: Array<TwineL2DepositsItem>;
+  top: number;
+  isLoading?: boolean;
+};
 
 const TwineDepositsTable = ({ items, top, isLoading }: Props) => {
   return (
-    <Table style={{ tableLayout: 'auto' }} minW="950px">
+    <Table style={{ tableLayout: 'auto' }} minW="1100px">
       <Thead top={ top }>
         <Tr>
-          <Th>Block No.</Th>
-          <Th>Txn hash</Th>
-          <Th>Age</Th>
-          <Th>L1 Token Address</Th>
-          <Th>L2 Token Address</Th>
+          <Th>Chain</Th>
+          <Th>Source Height</Th>
+          <Th>Source Txn Hash</Th>
+          <Th>Source Token</Th>
+          <Th>Destination Height</Th>
+          <Th>Destination Txn Hash</Th>
+          <Th>Destination Token</Th>
           <Th>From</Th>
           <Th>To</Th>
+          <Th>Age</Th>
+          <Th>Status</Th>
         </Tr>
       </Thead>
       <Tbody>
         { items.map((item, index) => (
-          <TwineDepositsTableItem key={ item.tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
+          <TwineDepositsTableItem key={ item.source_tx_hash + (isLoading ? index : '') } item={ item } isLoading={ isLoading }/>
         )) }
       </Tbody>
     </Table>

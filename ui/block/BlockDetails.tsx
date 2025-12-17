@@ -1,4 +1,4 @@
-import { Grid, GridItem, Text, Link, Box, Tooltip, Flex, Tag, TagLabel } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Link, Box, Tooltip, Flex, Tag, TagLabel, Spinner } from '@chakra-ui/react';
 import BigNumber from 'bignumber.js';
 import { capitalize } from 'es-toolkit';
 import { useRouter } from 'next/router';
@@ -36,6 +36,7 @@ import LinkInternal from 'ui/shared/links/LinkInternal';
 import PrevNext from 'ui/shared/PrevNext';
 import RawDataSnippet from 'ui/shared/RawDataSnippet';
 import StatusTag from 'ui/shared/statusTag/StatusTag';
+import { TwineIndividualChainDetails } from 'ui/shared/TwineIndividualChainDetails';
 import Utilization from 'ui/shared/Utilization/Utilization';
 import VerificationSteps from 'ui/shared/verificationSteps/VerificationSteps';
 import ZkSyncL2TxnBatchHashesInfo from 'ui/txnBatches/zkSyncL2/ZkSyncL2TxnBatchHashesInfo';
@@ -314,9 +315,14 @@ const BlockDetails = ({ query }: Props) => {
             Batch
           </DetailsInfoItem.Label>
           <DetailsInfoItem.Value>
-            { data.twine.number ?
-              <BatchEntityL2 isLoading={ isPlaceholderData } number={ data.twine.number }/> :
-              <Skeleton isLoaded={ !isPlaceholderData }>Pending</Skeleton> }
+            { data.twine.number ? (
+              <BatchEntityL2 isLoading={ isPlaceholderData } number={ data.twine.number }/>
+            ) : (
+              <Flex alignItems="center" gap={ 2 }>
+                <Spinner size="sm"/>
+                <Text variant="secondary" fontSize="sm">Pending</Text>
+              </Flex>
+            ) }
           </DetailsInfoItem.Value>
         </>
       ) }
@@ -331,7 +337,12 @@ const BlockDetails = ({ query }: Props) => {
           <DetailsInfoItem.Value>
             <Skeleton isLoaded={ !isPlaceholderData }>
               <Flex gap={ 2 } flexWrap="wrap" alignItems="center" justifyContent="center">
-                { data.twine.details.length === 0 && <Text>Batch status not available for this block</Text> }
+                { data.twine.details.length === 0 && (
+                  <Flex alignItems="center" gap={ 2 }>
+                    <Spinner size="sm"/>
+                    <Text variant="secondary" fontSize="sm">Loading status...</Text>
+                  </Flex>
+                ) }
                 { data.twine.details.map((detail) => (
                   <Tag
                     key={ detail.chain_id }
@@ -826,8 +837,47 @@ const BlockDetails = ({ query }: Props) => {
               ) }
             </>
           ) }
+
+          { data.da && (
+            <>
+              <DetailsInfoItemDivider/>
+              <DetailsInfoItem.Label
+                hint="Data Availability information for Celestia"
+              >
+                Data Availability
+              </DetailsInfoItem.Label>
+              <DetailsInfoItem.Value>
+                { data.da.celestia.commitment_hash ? (
+                  <Flex direction="column" gap={ 2 }>
+                    <Box>
+                      <Text fontWeight="medium">Commitment Hash:</Text>
+                      <Flex alignItems="center" gap={ 2 }>
+                        <HashStringShortenDynamic hash={ data.da.celestia.commitment_hash }/>
+                        <CopyToClipboard text={ data.da.celestia.commitment_hash }/>
+                      </Flex>
+                    </Box>
+                    { data.da.celestia.namespace && (
+                      <Box>
+                        <Text fontWeight="medium">Namespace:</Text>
+                        <Text>{ data.da.celestia.namespace }</Text>
+                      </Box>
+                    ) }
+                    { data.da.celestia.height && (
+                      <Box>
+                        <Text fontWeight="medium">Height:</Text>
+                        <Text>{ data.da.celestia.height }</Text>
+                      </Box>
+                    ) }
+                  </Flex>
+                ) : (
+                  <Text>Not committed to Celestia yet</Text>
+                ) }
+              </DetailsInfoItem.Value>
+            </>
+          ) }
         </>
       ) }
+      { data.twine && <TwineIndividualChainDetails chainDetails={ data.twine.details }/> }
     </Grid>
   );
 };

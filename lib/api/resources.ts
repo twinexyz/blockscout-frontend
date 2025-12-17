@@ -141,6 +141,7 @@ import type {
 import type {
   TwineL2DepositsResponse,
   TwineL2WithdrawalsResponse,
+  TwineL1WithdrawalsResponse,
   TwineBatchesResponse,
   TwineBatch,
   TwineBatchTxs,
@@ -1049,22 +1050,27 @@ export const RESOURCES = {
 
   // TWINE L2
   twine_l2_deposits: {
-    path: '/api/v2/twine/l1_deposits',
+    path: '/api/v2/twine/indexer/l1_deposits',
     filterFields: [],
   },
 
   twine_l2_withdrawals: {
-    path: '/api/v2/twine/l1_withdraws',
+    path: '/api/v2/twine/indexer/l2_withdraws',
+    filterFields: [],
+  },
+
+  twine_l1_withdrawals: {
+    path: '/api/v2/twine/indexer/l1_withdraws',
     filterFields: [],
   },
 
   twine_l2_txn_batches: {
-    path: '/api/v2/twine/batches',
+    path: '/api/v2/twine/indexer/batches',
     filterFields: [],
   },
 
   twine_l2_txn_batch: {
-    path: '/api/v2/twine/batches/:number',
+    path: '/api/v2/twine/indexer/batches/:number',
     pathParams: [ 'number' as const ],
     filterFields: [],
   },
@@ -1274,7 +1280,7 @@ export type PaginatedResources = 'blocks' | 'block_txs' | 'block_election_reward
 'watchlist' | 'private_tags_address' | 'private_tags_tx' |
 'domains_lookup' | 'addresses_lookup' | 'user_ops' | 'validators_stability' | 'validators_blackfort' | 'noves_address_history' |
 'token_transfers_all' | 'scroll_l2_txn_batches' | 'scroll_l2_txn_batch_txs' | 'scroll_l2_txn_batch_blocks' |
-'scroll_l2_deposits' | 'scroll_l2_withdrawals' | 'advanced_filter' | 'pools' | 'twine_l2_deposits' | 'twine_l2_withdrawals' |
+'scroll_l2_deposits' | 'scroll_l2_withdrawals' | 'advanced_filter' | 'pools' | 'twine_l2_deposits' | 'twine_l2_withdrawals' | 'twine_l1_withdrawals' |
 'twine_l2_txn_batches' | 'twine_l2_txn_batch';
 
 export type PaginatedResponse<Q extends PaginatedResources> = ResourcePayload<Q>;
@@ -1473,6 +1479,7 @@ Q extends 'pools' ? PoolsResponse :
 Q extends 'pool' ? Pool :
 Q extends 'twine_l2_deposits' ? TwineL2DepositsResponse :
 Q extends 'twine_l2_withdrawals' ? TwineL2WithdrawalsResponse :
+Q extends 'twine_l1_withdrawals' ? TwineL1WithdrawalsResponse :
 Q extends 'twine_l2_txn_batches' ? TwineBatchesResponse :
 Q extends 'twine_l2_txn_batch' ? TwineBatch :
 Q extends 'twine_l2_txn_batch_txs' ? TwineBatchTxs :

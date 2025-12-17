@@ -1,7 +1,7 @@
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TwineL2DepositsItem } from 'types/api/twineL2';
+import type { TwineL1WithdrawalsItem } from 'types/api/twineL2';
 
 import config from 'configs/app';
 import { TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
@@ -19,9 +19,12 @@ import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
 
 const rollupFeature = config.features.rollup;
 
-type Props = { item: TwineL2DepositsItem; isLoading?: boolean };
+type Props = { item: TwineL1WithdrawalsItem; isLoading?: boolean };
 
-const TwineDepositsListItem = ({ item, isLoading }: Props) => {
+const TwineL1WithdrawalsListItem = ({ item, isLoading }: Props) => {
+  const iconBgColor = useColorModeValue('gray.50', 'whiteAlpha.100');
+  const iconBorderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+
   const isSuccess = item.status === 1;
   const statusIcon: IconName = isSuccess ? 'status/success' : 'status/error';
   const statusBgColor = useColorModeValue(
@@ -32,9 +35,6 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
     isSuccess ? 'green.600' : 'red.600',
     isSuccess ? 'green.300' : 'red.300',
   );
-
-  const iconBgColor = useColorModeValue('gray.50', 'whiteAlpha.100');
-  const iconBorderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 
   // Fetch L1 token info via RPC
   const l1TokenInfo = useTwineTokenInfo({
@@ -121,7 +121,7 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
-          truncation="constant"
+          truncation="constant_long"
           noIcon
         />
       </ListItemMobileGrid.Value>
@@ -196,4 +196,4 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
   );
 };
 
-export default TwineDepositsListItem;
+export default TwineL1WithdrawalsListItem;

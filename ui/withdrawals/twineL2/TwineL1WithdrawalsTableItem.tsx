@@ -1,7 +1,7 @@
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import { Box, Td, Tr, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TwineL2DepositsItem } from 'types/api/twineL2';
+import type { TwineL1WithdrawalsItem } from 'types/api/twineL2';
 
 import config from 'configs/app';
 import { TWINE_CHAIN_MAPPING } from 'configs/app/features/twine';
@@ -14,14 +14,16 @@ import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
 import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 import TwineExternalLink from 'ui/shared/links/TwineExternalLink';
-import ListItemMobileGrid from 'ui/shared/ListItemMobile/ListItemMobileGrid';
 import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
 
 const rollupFeature = config.features.rollup;
 
-type Props = { item: TwineL2DepositsItem; isLoading?: boolean };
+type Props = { item: TwineL1WithdrawalsItem; isLoading?: boolean };
 
-const TwineDepositsListItem = ({ item, isLoading }: Props) => {
+const TwineL1WithdrawalsTableItem = ({ item, isLoading }: Props) => {
+  const iconBgColor = useColorModeValue('gray.50', 'whiteAlpha.100');
+  const iconBorderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+
   const isSuccess = item.status === 1;
   const statusIcon: IconName = isSuccess ? 'status/success' : 'status/error';
   const statusBgColor = useColorModeValue(
@@ -32,9 +34,6 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
     isSuccess ? 'green.600' : 'red.600',
     isSuccess ? 'green.300' : 'red.300',
   );
-
-  const iconBgColor = useColorModeValue('gray.50', 'whiteAlpha.100');
-  const iconBorderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 
   // Fetch L1 token info via RPC
   const l1TokenInfo = useTwineTokenInfo({
@@ -61,11 +60,8 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
   const chainIcon: IconName = (chainConfig?.icon ?? 'networks/icon-placeholder') as IconName;
 
   return (
-    <ListItemMobileGrid.Container>
-      <ListItemMobileGrid.Label isLoading={ isLoading }>
-        Chain
-      </ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+    <Tr>
+      <Td verticalAlign="middle">
         <Skeleton isLoaded={ !isLoading } display="inline-block" borderRadius="base">
           <Box
             display="inline-flex"
@@ -81,41 +77,31 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
             <IconSvg name={ chainIcon } boxSize={ 5 } isLoading={ isLoading }/>
           </Box>
         </Skeleton>
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Height</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <TwineExternalLink href={ item.source_block_height } chainId={ String(item.chain_id) } type="block" isLoading={ isLoading }>
           { item.source_block_height }
         </TwineExternalLink>
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Txn Hash</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <TwineExternalLink href={ item.source_tx_hash } chainId={ String(item.chain_id) } type="tx" isLoading={ isLoading }>
           { shortenString(item.source_tx_hash, 8) }
         </TwineExternalLink>
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Source Token</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <TwineExternalLink href={ item.l1_token } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading || l1TokenInfo.isLoading }>
           { l1TokenInfo.data?.symbol ? `$${ l1TokenInfo.data.symbol }` : shortenString(item.l1_token, 8) }
         </TwineExternalLink>
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Destination Height</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <BlockEntity
           number={ item.l2_handle_block_height }
           isLoading={ isLoading }
           fontSize="sm"
           lineHeight={ 5 }
         />
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Destination Txn Hash</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <TxEntity
           hash={ item.l2_handle_tx_hash }
           isLoading={ isLoading }
@@ -124,10 +110,8 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
           truncation="constant"
           noIcon
         />
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Destination Token</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <AddressEntity
           address={{
             hash: item.l2_token,
@@ -142,41 +126,29 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
           noCopy
           fontSize="sm"
         />
-      </ListItemMobileGrid.Value>
-      <ListItemMobileGrid.Label isLoading={ isLoading }>From</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <TwineExternalLink href={ item.from } chainId={ String(item.chain_id) } type="address" isLoading={ isLoading }>
           { shortenString(item.from, 8) }
         </TwineExternalLink>
-      </ListItemMobileGrid.Value>
-      <ListItemMobileGrid.Label isLoading={ isLoading }>To</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <AddressEntity
           address={{ hash: item.to_twine_address, name: '', is_contract: false, is_verified: false, ens_domain_name: null, implementations: null }}
           isLoading={ isLoading }
-          noCopy
           truncation="constant"
+          noCopy
         />
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Amount</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
-        <Skeleton isLoaded={ !isLoading } display="inline-block">
-          { item.amount }
-        </Skeleton>
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Age</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle" pr={ 12 }>
         <TimeAgoWithTooltip
           timestamp={ item.created_at }
           isLoading={ isLoading }
+          color="text_secondary"
           display="inline-block"
         />
-      </ListItemMobileGrid.Value>
-
-      <ListItemMobileGrid.Label isLoading={ isLoading }>Status</ListItemMobileGrid.Label>
-      <ListItemMobileGrid.Value>
+      </Td>
+      <Td verticalAlign="middle">
         <Skeleton isLoaded={ !isLoading } display="inline-block" borderRadius="base">
           <Box
             display="inline-flex"
@@ -191,9 +163,9 @@ const TwineDepositsListItem = ({ item, isLoading }: Props) => {
             <IconSvg name={ statusIcon } boxSize={ 4 } color={ statusIconColor } isLoading={ isLoading }/>
           </Box>
         </Skeleton>
-      </ListItemMobileGrid.Value>
-    </ListItemMobileGrid.Container>
+      </Td>
+    </Tr>
   );
 };
 
-export default TwineDepositsListItem;
+export default TwineL1WithdrawalsTableItem;
