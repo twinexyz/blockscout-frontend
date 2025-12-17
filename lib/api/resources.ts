@@ -1050,27 +1050,27 @@ export const RESOURCES = {
 
   // TWINE L2
   twine_l2_deposits: {
-    path: '/api/v2/twine/l1_deposits',
+    path: '/api/v2/twine/indexer/l1_deposits',
     filterFields: [],
   },
 
   twine_l2_withdrawals: {
-    path: '/api/v2/twine/l2_withdraws',
+    path: '/api/v2/twine/indexer/l2_withdraws',
     filterFields: [],
   },
 
   twine_l1_withdrawals: {
-    path: '/api/v2/twine/l1_withdraws',
+    path: '/api/v2/twine/indexer/l1_withdraws',
     filterFields: [],
   },
 
   twine_l2_txn_batches: {
-    path: '/api/v2/twine/batches',
+    path: '/api/v2/twine/indexer/batches',
     filterFields: [],
   },
 
   twine_l2_txn_batch: {
-    path: '/api/v2/twine/batches/:number',
+    path: '/api/v2/twine/indexer/batches/:number',
     pathParams: [ 'number' as const ],
     filterFields: [],
   },
